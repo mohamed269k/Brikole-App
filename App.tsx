@@ -6,11 +6,13 @@ import SearchBar from './components/SearchBar';
 import ServiceGrid from './components/ServiceGrid';
 import Footer from './components/Footer';
 import FeaturedPros from './components/FeaturedPros';
+import CityFilter from './components/CityFilter';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('fr');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCity, setSelectedCity] = useState<string>('All');
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -19,8 +21,14 @@ const App: React.FC = () => {
   
   const t = (key: string) => TRANSLATIONS[language][key] || key;
 
+  const cities = ['All', 'Casablanca', 'Rabat', 'Salé', 'Marrakech', 'Agadir', 'Tanger'];
+
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(prev => prev === categoryId ? null : categoryId);
+  };
+
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
   };
   
   const handleSearchChange = (query: string) => {
@@ -30,7 +38,7 @@ const App: React.FC = () => {
     // Check if the search query matches a category to auto-select it
     if (lowercasedQuery.length > 2) { // Threshold to prevent matching too early
       const matchedCategory = SERVICE_CATEGORIES.find(cat => 
-        Object.values(cat.name).some(name => name.toLowerCase().includes(lowercasedQuery))
+        Object.values(cat.name).some((name: string) => name.toLowerCase().includes(lowercasedQuery))
       );
 
       if (matchedCategory) {
@@ -54,7 +62,16 @@ const App: React.FC = () => {
           <SearchBar t={t} query={searchQuery} onSearchChange={handleSearchChange} />
         </div>
         
-        <div className="mt-16">
+        <div className="mt-8 flex justify-center">
+            <CityFilter 
+                cities={cities}
+                selectedCity={selectedCity}
+                onCityChange={handleCityChange}
+                t={t}
+            />
+        </div>
+
+        <div className="mt-8">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
           <ServiceGrid 
             currentLang={language} 
@@ -67,6 +84,7 @@ const App: React.FC = () => {
           t={t} 
           currentLang={language} 
           selectedCategory={selectedCategory} 
+          selectedCity={selectedCity}
           searchQuery={searchQuery}
         />
       </main>

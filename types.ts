@@ -16,7 +16,8 @@ export interface Professional {
     id: number;
     name: string;
     serviceId: string;
-    location: string;
+    serviceCities: string[];
+    address: string;
     rating: number;
-    image: string;
+    phone: string;
 }
