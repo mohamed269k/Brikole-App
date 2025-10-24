@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Language } from './types';
-import { TRANSLATIONS, SERVICE_CATEGORIES } from './constants';
+import { TRANSLATIONS, SERVICE_CATEGORIES, PROFESSIONALS } from './constants';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ServiceGrid from './components/ServiceGrid';
 import Footer from './components/Footer';
 import FeaturedPros from './components/FeaturedPros';
 import CityFilter from './components/CityFilter';
+import MapSection from './components/MapSection';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('fr');
@@ -47,6 +48,13 @@ const App: React.FC = () => {
     }
   };
 
+  const professionalsForMap = useMemo(() => {
+    if (!selectedCategory) {
+      return [];
+    }
+    return PROFESSIONALS.filter(pro => pro.serviceId === selectedCategory);
+  }, [selectedCategory]);
+
   return (
     <div className="bg-[#1a1a1a] text-gray-100 min-h-screen flex flex-col">
       <Header currentLang={language} setLang={setLanguage} t={t} />
@@ -79,6 +87,13 @@ const App: React.FC = () => {
             selectedCategory={selectedCategory}
           />
         </div>
+
+        <MapSection 
+          t={t}
+          currentLang={language}
+          professionals={professionalsForMap}
+          selectedCategory={selectedCategory}
+        />
 
         <FeaturedPros 
           t={t} 

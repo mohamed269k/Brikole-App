@@ -20,4 +20,6 @@ export interface Professional {
     address: string;
     rating: number;
     phone: string;
+    lat: number;
+    lng: number;
 }
