@@ -9,7 +9,6 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const { isConfigured } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,6 +16,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const { isSupabaseConfigured } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -35,8 +35,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     setError(null);
     setMessage(null);
+    const { client: supabase } = getSupabase();
 
-    const supabase = getSupabase();
+    if (!supabase) {
+      setError("Authentication service is currently unavailable.");
+      setLoading(false);
+      return;
+    }
 
     try {
       if (isLogin) {
@@ -78,7 +83,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <X className="w-6 h-6" />
         </button>
         
-        {isConfigured ? (
+        {isSupabaseConfigured ? (
           <>
             <div className="flex border-b border-gray-700 mb-6">
               <button 
@@ -146,11 +151,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             {message && <p className="mt-4 text-center text-green-400 bg-green-400/10 p-3 rounded-lg">{message}</p>}
           </>
         ) : (
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-amber-400 mb-4">Authentication Not Configured</h2>
-            <p className="text-gray-300">
-              This feature requires a connection to a database. The app developer must provide Supabase credentials in the project's secret settings to enable user sign-up and login.
-            </p>
+          <div className="p-8 text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">Authentication Unavailable</h2>
+            <p className="text-gray-400">The login service is not configured. Please contact the site administrator.</p>
           </div>
         )}
       </div>

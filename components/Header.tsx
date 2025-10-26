@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Language } from '../types';
 import { LANGUAGES } from '../constants';
@@ -31,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick }
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
-  const { session, user, signOut } = useAuth();
+  const { session, user, signOut, isSupabaseConfigured } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -52,15 +51,17 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick }
 
   const navLinks = (
     <>
-      {session && user ? (
-        <UserMenu user={user} onLogout={signOut} />
-      ) : (
-        <button 
-          onClick={onLoginClick}
-          className="bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors duration-300"
-        >
-          {t('login_signup')}
-        </button>
+      {isSupabaseConfigured && (
+        session && user ? (
+          <UserMenu user={user} onLogout={signOut} />
+        ) : (
+          <button 
+            onClick={onLoginClick}
+            className="bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors duration-300"
+          >
+            {t('login_signup')}
+          </button>
+        )
       )}
       <div className="relative" ref={langRef}>
         <button
