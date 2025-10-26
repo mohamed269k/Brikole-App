@@ -64,7 +64,7 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   },
 ];
 
-export const PROFESSIONALS: Professional[] = [
+const professionalsData: Professional[] = [
   // Casablanca Plumbers
   { id: 1, name: 'ELWARDI Hassan', serviceId: 'plumbing', serviceCities: ['Casablanca'], address: 'Avenue Bordeaux', rating: 4.8, phone: '06 53 69 87 70', lat: 33.5854, lng: -7.6366 },
   { id: 2, name: 'EDDAIF Abdelmajid', serviceId: 'plumbing', serviceCities: ['Casablanca'], address: 'Anfa', rating: 4.9, phone: '06 68 17 27 07', lat: 33.5862, lng: -7.5912 },
@@ -408,7 +408,7 @@ export const PROFESSIONALS: Professional[] = [
   { id: 318, name: 'OSMAN Hassan', serviceId: 'electrical', serviceCities: ['Marrakech'], address: '', rating: 4.7, phone: '06 67 05 68 63', lat: 31.6111, lng: -7.9959 },
   { id: 319, name: 'EL AOUNI Abdellah', serviceId: 'electrical', serviceCities: ['Marrakech'], address: '', rating: 4.6, phone: '06 69 23 99 62', lat: 31.6678, lng: -8.0062 },
   { id: 320, name: 'NIZARELEC NIZAR', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Mhamid Bloc 35 N° 12', rating: 4.9, phone: '06 63 71 00 99', lat: 31.5833, lng: -7.939 },
-  { id: 321, name: 'SWALEH Miloud', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.5, phone: '06 66 45 37 16', lat: 31.6703, lng: -7.9818 },
+  { id: 321, name: 'SWALEH Miloud', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.5, phone: '06 66 45 37 10', lat: 31.6703, lng: -7.9818 },
   { id: 322, name: 'JARRI Ibrahim', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.8, phone: '06 61 92 98 12', lat: 31.6648, lng: -7.9625 },
   { id: 323, name: 'KHANBAL Abdellatif', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.7, phone: '06 66 39 86 46', lat: 31.5947, lng: -8.0163 },
   { id: 324, name: 'JRAIDI Aboubaker', serviceId: 'electrical', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.6, phone: '06 42 84 02 37', lat: 31.6163, lng: -7.9984 },
@@ -605,7 +605,125 @@ export const PROFESSIONALS: Professional[] = [
   { id: 491, name: 'Abdelmoneim Benayad', serviceId: 'carpentry', serviceCities: ['Tanger'], address: 'Menuiserie aluminium', rating: 4.5, phone: '06 98 51 07 05', lat: 35.7876, lng: -5.8573 },
   { id: 492, name: 'Ahmad Jeraif', serviceId: 'carpentry', serviceCities: ['Tanger'], address: 'Menuiserie aluminium', rating: 4.7, phone: '06 35 60 17 65', lat: 35.7946, lng: -5.8061 },
   { id: 493, name: 'Benrkia Benissa', serviceId: 'carpentry', serviceCities: ['Tanger'], address: '', rating: 4.8, phone: '06 64 04 18 35', lat: 35.7314, lng: -5.8752 },
+
+  // MERGED GENERAL REPAIR PROFESSIONALS
+  { id: 494, name: 'nachit ayoub', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'derb el wydad blok 511 n 748 hay hassani', rating: 4.7, phone: '0630113133', lat: 33.5512, lng: -7.6658 },
+  { id: 495, name: 'abdelhak el', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'El oulfa', rating: 4.6, phone: '0602109451', lat: 33.5431, lng: -7.6821 },
+  { id: 496, name: 'sabar taoufik', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'ville errahma N 40 BC 14', rating: 4.8, phone: '0699341812', lat: 33.5123, lng: -7.7345 },
+  { id: 497, name: 'SWALEH Miloud', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.9, phone: '06 66 45 37 16', lat: 31.6411, lng: -8.0521 },
+  { id: 498, name: 'ENNAIM Aziz', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.7, phone: '06 67 01 41 94', lat: 31.6425, lng: -8.0488 },
+  { id: 499, name: 'ESSAGHIR Thami', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'Al Massira', rating: 4.8, phone: '06 62 20 29 28', lat: 31.6433, lng: -8.0613 },
+  { id: 500, name: 'mustapha alex', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'marrakech', rating: 4.5, phone: '0607392000', lat: 31.6295, lng: -7.9811 },
+  { id: 501, name: 'Haj Taoufik', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'Marrakech menara gueliz', rating: 4.6, phone: '0662106033', lat: 31.635, lng: -8.0189 },
+  { id: 502, name: 'R.E.S.T.D Travaux divers', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: '72 lot zaitouna rue al inab, mhamid', rating: 4.9, phone: '0660558377', lat: 31.5902, lng: -8.0214 },
+  { id: 503, name: 'Mehri Mansour', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'NO 175 DB MEHRI DR AKIOUD', rating: 4.8, phone: '0677701509', lat: 31.6033, lng: -8.0315 },
+  { id: 504, name: 'Sahine Brahim', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'BC 8 NO 332 BOAAKAZ MHAMID', rating: 4.7, phone: '0653412812', lat: 31.5851, lng: -8.0256 },
+  { id: 505, name: 'mustapha alex', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: 'marrakech', rating: 4.5, phone: '0607392000', lat: 31.631, lng: -7.999 },
+  { id: 506, name: 'R.E.S.T.D Travaux divers', serviceId: 'general_repair', serviceCities: ['Marrakech'], address: '72 lot zaitouna rue al inab, mhamid', rating: 4.9, phone: '0660558377', lat: 31.5913, lng: -8.0233 },
+  { id: 507, name: 'MSLINK Samir', serviceId: 'general_repair', serviceCities: ['Rabat'], address: '27 AV SIDI MOUHAMMED BEN ABDELAH AKARI', rating: 4.8, phone: '06 61 59 16 67', lat: 34.002, lng: -6.855 },
+  { id: 508, name: 'El Ghazi Ahmed', serviceId: 'general_repair', serviceCities: ['Rabat', 'Salé'], address: 'Rabat et sale', rating: 4.7, phone: '0625651190', lat: 34.0209, lng: -6.8417 },
+  { id: 509, name: 'El laouzi Yassine', serviceId: 'general_repair', serviceCities: ['Rabat'], address: 'Hassan, Rabat', rating: 4.9, phone: '0661495430', lat: 34.025, lng: -6.828 },
+  { id: 510, name: 'El ghazi Mohamed', serviceId: 'general_repair', serviceCities: ['Rabat'], address: 'C.Y.M rabat, Yaakoub el Mansour', rating: 4.6, phone: '0625651190', lat: 33.998, lng: -6.869 },
+  { id: 511, name: 'Rabie odoukdir', serviceId: 'general_repair', serviceCities: ['Rabat'], address: 'Groupe N 12 Bouitate', rating: 4.5, phone: '0676343878', lat: 33.984, lng: -6.845 },
+  { id: 512, name: 'AYOUB YOUB', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'AIN CHOQ', rating: 4.8, phone: '0675106030', lat: 33.546, lng: -7.632 },
+  { id: 513, name: 'Arro Tarik', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'Oulfa dispose sur casa.', rating: 4.7, phone: '+212689400857', lat: 33.548, lng: -7.691 },
+  { id: 514, name: 'SBAI NASOH MOHAMED', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'madinati GH4 immeuble 3 magazin n°2 hay azhar sidi bernoussi', rating: 4.9, phone: '0603118686', lat: 33.625, lng: -7.523 },
+  { id: 515, name: 'simouhamed boudlal', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'casablanca oulfa', rating: 4.6, phone: '0661989730', lat: 33.551, lng: -7.688 },
+  { id: 516, name: 'Said Amir', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'Hay El Hank', rating: 4.8, phone: '0663069243', lat: 33.603, lng: -7.642 },
+  { id: 517, name: 'RAMI zouhair', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'BOURGONE', rating: 4.7, phone: '0660706279', lat: 33.594, lng: -7.645 },
+  { id: 518, name: 'sabar taoufik', serviceId: 'general_repair', serviceCities: ['Casablanca'], address: 'ville errahma N 40 BC 14', rating: 4.8, phone: '0699341812', lat: 33.5134, lng: -7.7362 },
+  // New General Repair (Electronics) Professionals
+  { id: 519, name: 'AIT BATAMI Ibrahim', serviceId: 'general_repair', serviceCities: ['Salé'], address: 'Tabriquet', rating: 4.7, phone: '06 64 28 72 14', lat: 34.045, lng: -6.815 },
+  { id: 520, name: 'ECHERKAOUI Chihab', serviceId: 'general_repair', serviceCities: ['Salé'], address: 'Hay Essalam', rating: 4.8, phone: '06 61 58 75 57', lat: 34.060, lng: -6.795 },
+  { id: 521, name: 'Tamha Mustapha', serviceId: 'general_repair', serviceCities: ['Salé'], address: 'hay salam bloc 21 n 559', rating: 4.6, phone: '06 65 00 09 31', lat: 34.061, lng: -6.798 },
+  { id: 522, name: 'Jalal Benhihba', serviceId: 'general_repair', serviceCities: ['Salé'], address: '', rating: 4.7, phone: '0660396712', lat: 34.03, lng: -6.82 },
+  { id: 523, name: 'Benhiba Jalal', serviceId: 'general_repair', serviceCities: ['Salé'], address: 'bou chouk route de kentra', rating: 4.8, phone: '0660396712', lat: 34.08, lng: -6.78 },
+  { id: 524, name: 'Houssam Zeroual', serviceId: 'general_repair', serviceCities: ['Salé'], address: 'hay karima 1', rating: 4.9, phone: '0665 700 400', lat: 34.070, lng: -6.825 },
+  { id: 525, name: 'Rabie Baheri', serviceId: 'general_repair', serviceCities: ['Tanger'], address: 'Tanger', rating: 4.6, phone: '0659959121', lat: 35.77, lng: -5.83 },
+  { id: 526, name: 'Benaissa Mohamed Larbi', serviceId: 'general_repair', serviceCities: ['Tanger'], address: 'Hay', rating: 4.7, phone: '0661941725', lat: 35.76, lng: -5.82 },
+  { id: 527, name: 'Réparation Électroménager à Tanger', serviceId: 'general_repair', serviceCities: ['Tanger'], address: '', rating: 4.8, phone: '06 61 63 72 24', lat: 35.78, lng: -5.81 },
+  { id: 528, name: 'Luxbricall', serviceId: 'general_repair', serviceCities: ['Tanger'], address: 'À domicile', rating: 4.9, phone: '06 61 30 35 71', lat: 35.77, lng: -5.83 },
+  { id: 529, name: 'Reparation machine a laver et Réfrigérateur', serviceId: 'general_repair', serviceCities: ['Tanger'], address: 'Tanger', rating: 4.7, phone: '0655-837730', lat: 35.75, lng: -5.84 },
+  { id: 530, name: 'Doctor Menager SAV AGADIR - Service de reparation et installation d\'électroménager - Travaux Multiservice immobilière', serviceId: 'general_repair', serviceCities: ['Agadir'], address: '', rating: 4.8, phone: '0708-084229', lat: 30.415, lng: -9.585 },
+  { id: 531, name: 'leSatelliste(chezAmine', serviceId: 'general_repair', serviceCities: ['Agadir'], address: '', rating: 4.6, phone: '0661-380185', lat: 30.432, lng: -9.601 },
+  { id: 532, name: 'Agadir Electro - Réparation Electroménager à Agadir', serviceId: 'general_repair', serviceCities: ['Agadir'], address: '', rating: 4.7, phone: '0720-106282', lat: 30.400, lng: -9.610 },
+  // Furniture Assembly Professionals
+  // Casablanca
+  { id: 533, name: 'Decorat.ma', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Casablanca', rating: 4.7, phone: '06 18 05 36 45', lat: 33.5731, lng: -7.5898 },
+  { id: 534, name: 'Kasa.ma', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Casablanca', rating: 4.8, phone: '06 70 08 60 66', lat: 33.575, lng: -7.595 },
+  { id: 535, name: 'Cilek Casablanca Ghandi', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Ghandi, Casablanca', rating: 4.6, phone: '06 64 46 73 95', lat: 33.580, lng: -7.630 },
+  { id: 536, name: 'Meublin.ma', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Casablanca', rating: 4.9, phone: '06 63 62 02 08', lat: 33.590, lng: -7.618 },
+  { id: 537, name: 'Pastel-Living', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Casablanca', rating: 4.5, phone: '05 20 52 66 64', lat: 33.585, lng: -7.625 },
+  { id: 538, name: 'Lemobilier.ma', serviceId: 'assembly', serviceCities: ['Casablanca'], address: 'Casablanca', rating: 4.7, phone: '05 22 25 43 21', lat: 33.592, lng: -7.605 },
+  
+  // Marrakech
+  { id: 539, name: 'Primaconfort', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Marrakech', rating: 4.8, phone: '06 60 25 28 52', lat: 31.6295, lng: -7.9811 },
+  { id: 540, name: 'Meuble Dari', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Marrakech', rating: 4.6, phone: '07 07 77 71 13', lat: 31.631, lng: -7.999 },
+  { id: 541, name: 'KITEA Guéliz', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Guéliz, Marrakech', rating: 4.9, phone: '08 02 00 80 02', lat: 31.634, lng: -8.016 },
+  { id: 542, name: 'IYA AMEUBLEMENT', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Marrakech', rating: 4.5, phone: '06 61 24 83 82', lat: 31.639, lng: -7.995 },
+  { id: 543, name: 'Istikbal Marrakech', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Marrakech', rating: 4.7, phone: '05 24 30 31 56', lat: 31.642, lng: -8.005 },
+  { id: 544, name: 'Azzro House', serviceId: 'assembly', serviceCities: ['Marrakech'], address: 'Marrakech', rating: 4.8, phone: '06 66 19 22 45', lat: 31.619, lng: -7.989 },
+
+  // Rabat
+  { id: 545, name: 'Mobilium Rabat Agdal', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Agdal, Rabat', rating: 4.6, phone: '05 30 19 15 49', lat: 34.008, lng: -6.852 },
+  { id: 546, name: 'Cilek Rooms Rabat', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.9, phone: '05 37 77 74 01', lat: 34.015, lng: -6.840 },
+  { id: 547, name: 'IXINA Rabat', serviceId: 'assembly', serviceCities: ['Rabat', 'Casablanca', 'Marrakech'], address: 'Rabat', rating: 4.8, phone: '05 37 57 53 03', lat: 34.018, lng: -6.855 },
+  { id: 548, name: 'LE MASSIF', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.7, phone: '06 00 92 46 66', lat: 34.021, lng: -6.833 },
+  { id: 549, name: 'FORUM DIFFUSION', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.5, phone: '05 37 77 71 07', lat: 34.025, lng: -6.838 },
+  { id: 550, name: 'Monde Meuble', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.8, phone: '06 74 06 03 04', lat: 34.030, lng: -6.828 },
+  { id: 551, name: 'KITEA Géant Rabat', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.9, phone: '08 02 00 80 02', lat: 33.999, lng: -6.860 },
+  { id: 552, name: 'Zakaria Meubles', serviceId: 'assembly', serviceCities: ['Rabat'], address: 'Rabat', rating: 4.6, phone: '06 30 11 63 08', lat: 34.005, lng: -6.845 },
+
+  // Salé
+  { id: 553, name: 'Mobilia Italia', serviceId: 'assembly', serviceCities: ['Salé'], address: 'Salé', rating: 4.7, phone: '06 42 56 93 47', lat: 34.035, lng: -6.821 },
+  { id: 554, name: 'Maison de meubles', serviceId: 'assembly', serviceCities: ['Salé'], address: 'Salé', rating: 4.8, phone: '06 61 99 13 99', lat: 34.040, lng: -6.825 },
+  { id: 555, name: 'Le coin meublé', serviceId: 'assembly', serviceCities: ['Salé'], address: 'Salé', rating: 4.6, phone: '06 61 92 25 57', lat: 34.045, lng: -6.818 },
+  { id: 556, name: 'Meuble Making', serviceId: 'assembly', serviceCities: ['Salé'], address: 'Salé', rating: 4.9, phone: '06 61 65 75 41', lat: 34.050, lng: -6.822 },
+
+  // Tanger
+  { id: 557, name: 'Maimouni', serviceId: 'assembly', serviceCities: ['Tanger'], address: 'Casabarata', rating: 4.5, phone: '06 61 18 78 32', lat: 35.772, lng: -5.795 },
+  { id: 558, name: 'Meubles بيتي', serviceId: 'assembly', serviceCities: ['Tanger'], address: 'Hay Manar', rating: 4.7, phone: '06 21 03 98 23', lat: 35.758, lng: -5.815 },
+  { id: 559, name: 'Cilek Room Tanger', serviceId: 'assembly', serviceCities: ['Tanger'], address: '153 Ave Mohammed', rating: 4.8, phone: '06 64 32 03 15', lat: 35.780, lng: -5.810 },
+  { id: 560, name: 'KITEA Géant Tanger', serviceId: 'assembly', serviceCities: ['Tanger'], address: 'Route de Rabat', rating: 4.9, phone: '08 02 00 80 02', lat: 35.735, lng: -5.885 },
+  
+  // Agadir
+  { id: 561, name: 'Istikbal Agadir', serviceId: 'assembly', serviceCities: ['Agadir'], address: 'Centre Commercial Marjane Founty', rating: 4.6, phone: '05 28 28 05 73', lat: 30.395, lng: -9.580 },
+  { id: 562, name: 'Agadir meubles-Richbond', serviceId: 'assembly', serviceCities: ['Agadir'], address: 'Agadir', rating: 4.8, phone: '05 28 82 44 49', lat: 30.418, lng: -9.598 },
+  { id: 563, name: 'Sté SEMAMAG', serviceId: 'assembly', serviceCities: ['Agadir'], address: 'Av. Kadi Ayad', rating: 4.7, phone: '05 28 84 89 00', lat: 30.422, lng: -9.605 },
+  { id: 564, name: 'Agadir meubles-Simmons', serviceId: 'assembly', serviceCities: ['Agadir'], address: 'Agadir', rating: 4.9, phone: '05 28 84 13 40', lat: 30.425, lng: -9.595 },
 ];
+
+/**
+ * Helper function to generate random coordinates within a bounding box for Salé.
+ * This is used to place professionals who don't have a specific address on the map
+ * in a plausible location within the city, rather than in the ocean.
+ */
+const getRandomCoordsInSale = (): { lat: number; lng: number } => {
+    // Bounding box for Salé
+    const minLat = 34.01;
+    const maxLat = 34.07;
+    const minLng = -6.85;
+    const maxLng = -6.79;
+
+    const lat = Math.random() * (maxLat - minLat) + minLat;
+    const lng = Math.random() * (maxLng - minLng) + minLng;
+
+    return { lat: parseFloat(lat.toFixed(4)), lng: parseFloat(lng.toFixed(4)) };
+};
+
+// Process the data to fix Salé coordinates for professionals without a specific address.
+export const PROFESSIONALS: Professional[] = professionalsData.map(pro => {
+    if (pro.serviceCities.includes('Salé') && pro.address === '') {
+        const newCoords = getRandomCoordsInSale();
+        return {
+            ...pro,
+            lat: newCoords.lat,
+            lng: newCoords.lng
+        };
+    }
+    return pro;
+});
+
 
 export const TRANSLATIONS: Record<Language, TranslationSet> = {
   en: {

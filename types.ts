@@ -1,4 +1,8 @@
+
 import React from 'react';
+import { User, Session } from '@supabase/supabase-js';
+
+export type { User, Session };
 
 export type Language = 'en' | 'fr' | 'ar';
 

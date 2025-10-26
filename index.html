@@ -39,13 +39,40 @@
       .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
         background-color: #4a5568 !important;
       }
+      .map-placeholder-bg {
+        background: radial-gradient(ellipse at center, rgba(42, 42, 42, 0.5) 0%, rgba(26, 26, 26, 1) 70%);
+      }
+      @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px 5px rgba(251, 191, 36, 0.2); }
+        50% { box-shadow: 0 0 35px 15px rgba(251, 191, 36, 0.3); }
+      }
+      .animate-pulse-glow {
+        animation: pulse-glow 4s infinite ease-in-out;
+      }
+
+      @keyframes orbit {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      .animate-orbit {
+        animation: orbit 40s linear infinite;
+      }
+
+      @keyframes bob {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      .animate-bob {
+          animation: bob 3s infinite ease-in-out;
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0"
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@supabase/supabase-js": "https://aistudiocdn.com/@supabase/supabase-js@^2.76.1"
   }
 }
 </script>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 type IconProps = React.SVGProps<SVGSVGElement>;
@@ -137,4 +138,18 @@ export const List: React.FC<IconProps> = (props) => (
     <line x1="3" x2="3.01" y1="12" y2="12"/>
     <line x1="3" x2="3.01" y1="18" y2="18"/>
   </svg>
+);
+
+export const ArrowUp: React.FC<IconProps> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M12 19V5"/>
+        <path d="m5 12 7-7 7 7"/>
+    </svg>
+);
+
+export const User: React.FC<IconProps> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg>
 );
