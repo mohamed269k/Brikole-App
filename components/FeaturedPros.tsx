@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { PROFESSIONALS, SERVICE_CATEGORIES } from '../constants';
-import { Language } from '../types';
+import { SERVICE_CATEGORIES } from '../constants';
+import { Language, Professional } from '../types';
 import ProCard from './ProCard';
 import { ChevronLeftIcon, ChevronRightIcon } from './icons';
 
 interface FeaturedProsProps {
   t: (key: string) => string;
   currentLang: Language;
+  professionals: Professional[];
   selectedCategory: string | null;
   selectedCity: string;
   searchQuery: string;
@@ -14,11 +15,11 @@ interface FeaturedProsProps {
 
 const PROS_PER_PAGE = 5;
 
-const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, selectedCategory, selectedCity, searchQuery }) => {
+const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professionals, selectedCategory, selectedCity, searchQuery }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const lowercasedQuery = searchQuery.toLowerCase().trim();
-  let filteredPros = PROFESSIONALS;
+  let filteredPros = professionals;
 
   // 1. Filter by the selected city
   if (selectedCity !== 'All') {

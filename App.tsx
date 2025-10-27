@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
-import { Language } from './types';
+import { Language, Professional } from './types';
 import { TRANSLATIONS, SERVICE_CATEGORIES, PROFESSIONALS } from './constants';
-import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ServiceGrid from './components/ServiceGrid';
@@ -11,19 +10,54 @@ import FeaturedPros from './components/FeaturedPros';
 import CityFilter from './components/CityFilter';
 import MapSection from './components/MapSection';
 import AuthModal from './components/AuthModal';
+import ProfileModal from './components/ProfileModal';
+import OnboardingModal from './components/OnboardingModal';
+import AdminDashboard from './components/AdminDashboard';
+import ProviderOnboarding from './components/ProviderOnboarding';
+import PricingPage from './components/PricingPage';
+import PaymentModal from './components/PaymentModal';
+import { getSupabase } from './lib/supabaseClient';
 
-const App: React.FC = () => {
-  const [language, setLanguage] = useState<Language>('fr');
+const MainContent: React.FC<{
+  language: Language;
+  t: (key: string) => string;
+}> = ({ language, t }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState<string>('All');
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
+  const [professionals, setProfessionals] = useState<Professional[]>(PROFESSIONALS);
+  
   useEffect(() => {
-    document.documentElement.lang = language;
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-  }, [language]);
+    const fetchProfessionals = async () => {
+        const { client: supabase } = getSupabase();
+        if (!supabase) return;
+
+        const { data, error } = await supabase.from('professionals').select('*');
+
+        if (error) {
+            console.error("Error fetching professionals from DB:", error.message);
+        } else if (data) {
+            const fetchedPros: Professional[] = data.map(item => ({
+                id: item.id,
+                name: item.name,
+                serviceId: item.service_id,
+                serviceCities: item.service_cities,
+                address: item.address,
+                rating: item.rating,
+                phone: item.phone,
+                lat: item.lat,
+                lng: item.lng,
+            }));
+            // Use a Set to ensure unique professionals based on ID
+            const combined = [...PROFESSIONALS, ...fetchedPros];
+            const uniquePros = Array.from(new Map(combined.map(p => [p.id, p])).values());
+            setProfessionals(uniquePros);
+        }
+    };
+
+    fetchProfessionals();
+  }, []);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -41,12 +75,8 @@ const App: React.FC = () => {
       }
     }, 300);
 
-    return () => {
-      clearTimeout(handler);
-    };
+    return () => clearTimeout(handler);
   }, [searchQuery]);
-  
-  const t = (key: string) => TRANSLATIONS[language][key] || key;
 
   const cities = ['All', 'Casablanca', 'Rabat', 'Salé', 'Marrakech', 'Agadir', 'Tanger'];
 
@@ -54,80 +84,141 @@ const App: React.FC = () => {
     setSelectedCategory(prev => prev === categoryId ? null : categoryId);
   };
 
-  const handleCityChange = (city: string) => {
-    setSelectedCity(city);
-  };
-  
-  const handleSearchChange = (query: string) => {
-    setSearchQuery(query);
-  };
-
   const professionalsForMap = useMemo(() => {
-    if (!selectedCategory) {
-      return [];
-    }
-    return PROFESSIONALS.filter(pro => pro.serviceId === selectedCategory);
-  }, [selectedCategory]);
+    if (!selectedCategory) return [];
+    return professionals.filter(pro => pro.serviceId === selectedCategory);
+  }, [selectedCategory, professionals]);
 
   return (
-    <AuthProvider>
+    <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
+      <div className="text-center max-w-3xl mx-auto">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 text-amber-400" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+          {t('main_heading')}
+        </h1>
+        <p className="text-lg md:text-xl text-gray-300 mb-8">
+          {t('sub_heading')}
+        </p>
+        <SearchBar t={t} query={searchQuery} onSearchChange={setSearchQuery} />
+      </div>
+      
+      <div className="mt-8 flex justify-center">
+        <CityFilter cities={cities} selectedCity={selectedCity} onCityChange={setSelectedCity} t={t} />
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
+        <ServiceGrid currentLang={language} onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
+      </div>
+
+      <MapSection t={t} currentLang={language} professionals={professionalsForMap} selectedCategory={selectedCategory} />
+
+      <FeaturedPros 
+        t={t} 
+        currentLang={language} 
+        professionals={professionals} 
+        selectedCategory={selectedCategory} 
+        selectedCity={selectedCity} 
+        searchQuery={debouncedSearchQuery} 
+      />
+    </main>
+  );
+};
+
+const App: React.FC = () => {
+  const [language, setLanguage] = useState<Language>('fr');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [route, setRoute] = useState(window.location.hash || '#/');
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const handleHashChange = () => setRoute(window.location.hash || '#/');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+  
+  useEffect(() => {
+    if (!user) {
+        if (['#/admin', '#/provider-onboarding', '#/pricing'].includes(route)) {
+            window.location.hash = '/';
+        }
+        return;
+    }
+
+    const isAdmin = user.email === 'dropshop2345instant@gmail.com';
+    const isProvider = user.user_metadata?.role === 'provider';
+    const isClient = user.user_metadata?.role === 'client';
+    const profileSubmitted = user.user_metadata?.profile_submitted;
+
+    if (isAdmin) {
+        if (route !== '#/admin') window.location.hash = '/admin';
+    } else if (isProvider) {
+        if (!profileSubmitted && route !== '#/provider-onboarding') {
+            window.location.hash = '/provider-onboarding';
+        } else if (profileSubmitted && route === '#/provider-onboarding') {
+            window.location.hash = '/pricing';
+        }
+    } else if (isClient) {
+        const hasOnboarded = !!user.user_metadata?.full_name;
+        if (!hasOnboarded) {
+          const timer = setTimeout(() => setShowOnboardingModal(true), 500);
+          return () => clearTimeout(timer);
+        }
+        if (['#/provider-onboarding', '#/pricing', '#/admin'].includes(route)) {
+            window.location.hash = '/';
+        }
+    }
+    
+    if (!isAdmin && route === '#/admin') {
+        window.location.hash = '/';
+    }
+  }, [user, route]);
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  }, [language]);
+  
+  const t = (key: string) => TRANSLATIONS[language][key] || key;
+
+  const renderContent = () => {
+    const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
+    const isProvider = user?.user_metadata?.role === 'provider';
+
+    if (route === '#/admin' && isAdminUser) return <AdminDashboard />;
+    if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
+    if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} />;
+    
+    return <MainContent language={language} t={t} />;
+  };
+
+  return (
+    <>
       <div className="bg-[#1a1a1a] text-gray-100 min-h-screen flex flex-col">
         <Header 
           currentLang={language} 
           setLang={setLanguage} 
           t={t} 
           onLoginClick={() => setShowAuthModal(true)}
+          onProfileClick={() => setShowProfileModal(true)}
         />
         
-        <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-amber-400" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-              {t('main_heading')}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300 mb-8">
-              {t('sub_heading')}
-            </p>
-            <SearchBar t={t} query={searchQuery} onSearchChange={handleSearchChange} />
-          </div>
-          
-          <div className="mt-8 flex justify-center">
-              <CityFilter 
-                  cities={cities}
-                  selectedCity={selectedCity}
-                  onCityChange={handleCityChange}
-                  t={t}
-              />
-          </div>
-
-          <div className="mt-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
-            <ServiceGrid 
-              currentLang={language} 
-              onSelectCategory={handleCategorySelect}
-              selectedCategory={selectedCategory}
-            />
-          </div>
-
-          <MapSection 
-            t={t}
-            currentLang={language}
-            professionals={professionalsForMap}
-            selectedCategory={selectedCategory}
-          />
-
-          <FeaturedPros 
-            t={t} 
-            currentLang={language} 
-            selectedCategory={selectedCategory} 
-            selectedCity={selectedCity}
-            searchQuery={debouncedSearchQuery}
-          />
-        </main>
+        {renderContent()}
         
         <Footer t={t} />
       </div>
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-    </AuthProvider>
+      <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
+      <OnboardingModal 
+        isOpen={showOnboardingModal} 
+        onClose={() => setShowOnboardingModal(false)}
+        onSuccess={() => setShowOnboardingModal(false)}
+      />
+      <PaymentModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+    </>
   );
 };
 

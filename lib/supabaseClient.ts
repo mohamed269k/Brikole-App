@@ -17,7 +17,7 @@ export const getSupabase = (): { client: SupabaseClient | null; isConfigured: bo
       const client = createClient(supabaseUrl, supabaseAnonKey);
       supabaseInstance = { client, isConfigured: true };
     } catch (error) {
-      console.error("Error initializing Supabase client:", error);
+      console.error("Error initializing Supabase client:", (error as Error).message);
       supabaseInstance = { client: null, isConfigured: false };
     }
   } else {

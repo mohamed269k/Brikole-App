@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Language } from '../types';
 import { LANGUAGES } from '../constants';
@@ -10,10 +11,11 @@ interface HeaderProps {
   setLang: (lang: Language) => void;
   t: (key: string) => string;
   onLoginClick: () => void;
+  onProfileClick: () => void;
 }
 
 const Logo: React.FC = () => (
-  <div className="flex items-center gap-2 cursor-pointer">
+  <div className="flex items-center gap-2">
     <div className="relative w-12 h-12 flex items-center justify-center">
       <svg viewBox="0 0 100 100" className="absolute w-full h-full text-amber-400 fill-current">
         <path d="M62.6,0H23.1C10.3,0,0,10.3,0,23.1v53.7C0,89.7,10.3,100,23.1,100h39.5c12.8,0,23.1-10.3,23.1-23.1V62.6C85.7,62.6,62.6,0,62.6,0z M62.6,76.9c0,2.6-2.1,4.7-4.7,4.7H23.1c-2.6,0-4.7-2.1,4.7-4.7V23.1c0-2.6,2.1-4.7,4.7-4.7h34.8V62.6C57.9,70.5,62.6,76.9,62.6,76.9z" />
@@ -26,7 +28,7 @@ const Logo: React.FC = () => (
   </div>
 );
 
-const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick }) => {
+const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick, onProfileClick }) => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick }
     <>
       {isSupabaseConfigured && (
         session && user ? (
-          <UserMenu user={user} onLogout={signOut} />
+          <UserMenu user={user} onLogout={signOut} onProfileClick={onProfileClick} />
         ) : (
           <button 
             onClick={onLoginClick}
@@ -96,7 +98,9 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick }
     <header className="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 shadow-lg shadow-black/20">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Logo />
+          <a href="#/" aria-label="Go to homepage">
+            <Logo />
+          </a>
           <div className="hidden md:flex items-center gap-4">
             {navLinks}
           </div>

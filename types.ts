@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { User, Session } from '@supabase/supabase-js';
 
@@ -26,4 +25,17 @@ export interface Professional {
     phone: string;
     lat: number;
     lng: number;
+}
+
+export interface ProviderRequest {
+  id: string;
+  user_id: string;
+  full_name: string;
+  phone: string;
+  company_name?: string;
+  cities: string[];
+  services: string[];
+  status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+  user_email: string;
 }
