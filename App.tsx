@@ -17,11 +17,13 @@ import ProviderOnboarding from './components/ProviderOnboarding';
 import PricingPage from './components/PricingPage';
 import PaymentModal from './components/PaymentModal';
 import { getSupabase } from './lib/supabaseClient';
+import ProProfileModal from './components/ProProfileModal';
 
 const MainContent: React.FC<{
   language: Language;
   t: (key: string) => string;
-}> = ({ language, t }) => {
+  onViewProfile: (pro: Professional) => void;
+}> = ({ language, t, onViewProfile }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -49,8 +51,14 @@ const MainContent: React.FC<{
                 lat: item.lat,
                 lng: item.lng,
             }));
+            
+            // Per user request, filter out a specific professional that may be in the database.
+            const filteredFetchedPros = fetchedPros.filter(pro => 
+                !(pro.name.toLowerCase() === 'mohamed amine' && pro.phone === '0685953242' && pro.serviceId === 'assembly')
+            );
+
             // Use a Set to ensure unique professionals based on ID
-            const combined = [...PROFESSIONALS, ...fetchedPros];
+            const combined = [...PROFESSIONALS, ...filteredFetchedPros];
             const uniquePros = Array.from(new Map(combined.map(p => [p.id, p])).values());
             setProfessionals(uniquePros);
         }
@@ -118,7 +126,8 @@ const MainContent: React.FC<{
         professionals={professionals} 
         selectedCategory={selectedCategory} 
         selectedCity={selectedCity} 
-        searchQuery={debouncedSearchQuery} 
+        searchQuery={debouncedSearchQuery}
+        onViewProfile={onViewProfile} 
       />
     </main>
   );
@@ -130,6 +139,7 @@ const App: React.FC = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedPro, setSelectedPro] = useState<Professional | null>(null);
   const [route, setRoute] = useState(window.location.hash || '#/');
 
   const { user } = useAuth();
@@ -183,6 +193,9 @@ const App: React.FC = () => {
   }, [language]);
   
   const t = (key: string) => TRANSLATIONS[language][key] || key;
+  
+  const handleViewProfile = (pro: Professional) => setSelectedPro(pro);
+  const handleCloseProProfile = () => setSelectedPro(null);
 
   const renderContent = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
@@ -192,7 +205,7 @@ const App: React.FC = () => {
     if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
     if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} />;
     
-    return <MainContent language={language} t={t} />;
+    return <MainContent language={language} t={t} onViewProfile={handleViewProfile} />;
   };
 
   return (
@@ -218,6 +231,11 @@ const App: React.FC = () => {
         onSuccess={() => setShowOnboardingModal(false)}
       />
       <PaymentModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+      <ProProfileModal
+        isOpen={!!selectedPro}
+        onClose={handleCloseProProfile}
+        professional={selectedPro}
+      />
     </>
   );
 };

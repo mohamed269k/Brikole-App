@@ -8,16 +8,29 @@ interface PricingPageProps {
 const PricingPage: React.FC<PricingPageProps> = ({ onPayClick }) => {
   const plans = [
     {
-      name: 'Starter Pro',
+      name: 'Standard Plan',
       price: '49',
-      features: ['Standard Listing', 'Up to 5 Service Categories', 'Basic Profile', 'Email Support'],
-      cta: 'Choose Starter',
+      description: 'Perfect for individual workers or small teams who want visibility and client access at an affordable price.',
+      features: [
+        '🔹 Standard listing placement on Brikole',
+        '📍 Regular visibility in the “Near Me” map feature',
+        '💬 Access to standard customer support',
+        '🤝 Limited participation in our referral program',
+      ],
+      cta: 'Choose Standard',
     },
     {
-      name: 'Business Pro',
+      name: 'Premium Plan',
       price: '149',
-      features: ['Featured Listing', 'Unlimited Categories', 'Enhanced Profile with Photos', 'Priority Phone & Email Support'],
-      cta: 'Choose Business',
+      description: 'Designed for professionals who want maximum exposure, credibility, and priority service.',
+      features: [
+        '🌟 Top placement within the first 3 pages of listings',
+        '📍 Highlighted position in the “Near Me” map feature',
+        '✅ Verified Provider Badge for higher trust and visibility',
+        '🕐 24/7 Priority Support via chat or phone',
+        '💎 Full access to our Premium Referral Program',
+      ],
+      cta: 'Choose Premium',
       isFeatured: true,
     },
   ];
@@ -52,10 +65,11 @@ const PricingPage: React.FC<PricingPageProps> = ({ onPayClick }) => {
                 <span className="text-5xl font-bold text-white">{plan.price}</span>
                 <span className="text-lg text-gray-400"> MAD/month</span>
               </div>
+              <p className="text-gray-400 text-sm mb-6 text-left min-h-[60px]">{plan.description}</p>
               <ul className="space-y-3 text-left flex-grow">
                 {plan.features.map(feature => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <Check className="w-5 h-5 text-green-500" />
+                  <li key={feature} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
                     <span className="text-gray-300">{feature}</span>
                   </li>
                 ))}
@@ -64,7 +78,7 @@ const PricingPage: React.FC<PricingPageProps> = ({ onPayClick }) => {
                 onClick={() => onPayClick(plan.name)}
                 className={`w-full mt-8 font-semibold rounded-lg py-3 transition-colors ${plan.isFeatured ? 'bg-amber-400 text-gray-900 hover:bg-amber-500' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
               >
-                Continue to Pay
+                {plan.cta}
               </button>
             </div>
           ))}

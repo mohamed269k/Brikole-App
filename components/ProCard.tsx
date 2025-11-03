@@ -7,6 +7,7 @@ interface ProCardProps {
   pro: Professional;
   t: (key: string) => string;
   currentLang: Language;
+  onViewProfile: (pro: Professional) => void;
 }
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
@@ -27,7 +28,7 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
 };
 
 
-const ProCard: React.FC<ProCardProps> = ({ pro, t, currentLang }) => {
+const ProCard: React.FC<ProCardProps> = ({ pro, t, currentLang, onViewProfile }) => {
   const service = SERVICE_CATEGORIES.find(s => s.id === pro.serviceId);
   const serviceName = service ? service.name[currentLang] : 'Specialist';
 
@@ -51,7 +52,9 @@ const ProCard: React.FC<ProCardProps> = ({ pro, t, currentLang }) => {
           <StarRating rating={pro.rating} />
         </div>
       </div>
-      <button className="mt-auto w-full bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors duration-300">
+      <button
+        onClick={() => onViewProfile(pro)}
+        className="mt-auto w-full bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors duration-300">
         {t('view_profile')}
       </button>
     </div>

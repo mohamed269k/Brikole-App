@@ -34,11 +34,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-400">Account Holder Name</p>
-            <p className="text-lg text-white">BRIKOLE SERVICES SARL</p>
+            <p className="text-lg text-white">Mohamed Elkarakhi</p>
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-400">RIB (Bank Account Number)</p>
-            <p className="text-lg font-mono text-amber-400 tracking-wider">007 780 0001234500000678 90</p>
+            <p className="text-lg font-mono text-amber-400 tracking-wider">857 780 0000000000585442 28</p>
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-400">Reference / Reason for Transfer</p>
@@ -47,7 +47,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         <p className="text-xs text-gray-500 mt-6 text-center">
-            Note: This is example information. Please ensure you use the correct details provided in a real-world scenario.
             Account approval may take up to 24 hours after payment is received.
         </p>
 

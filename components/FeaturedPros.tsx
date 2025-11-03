@@ -11,11 +11,12 @@ interface FeaturedProsProps {
   selectedCategory: string | null;
   selectedCity: string;
   searchQuery: string;
+  onViewProfile: (pro: Professional) => void;
 }
 
 const PROS_PER_PAGE = 5;
 
-const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professionals, selectedCategory, selectedCity, searchQuery }) => {
+const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professionals, selectedCategory, selectedCity, searchQuery, onViewProfile }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const lowercasedQuery = searchQuery.toLowerCase().trim();
@@ -88,6 +89,7 @@ const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professiona
                 pro={pro}
                 t={t}
                 currentLang={currentLang}
+                onViewProfile={onViewProfile}
               />
             ))}
           </div>
