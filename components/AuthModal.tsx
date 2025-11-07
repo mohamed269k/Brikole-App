@@ -59,7 +59,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           },
         });
         if (error) throw error;
-        setMessage('Check your email for the confirmation link!');
+
+        if (data.user?.email_confirmed_at) {
+          setError('This email is already registered. Please use the Sign In tab.');
+        } else {
+          setMessage('Check your email for the confirmation link!');
+        }
       }
     } catch (err: any) {
       setError(err.error_description || err.message);

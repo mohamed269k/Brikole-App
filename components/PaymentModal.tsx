@@ -1,12 +1,14 @@
+
 import React from 'react';
 import { X } from './icons';
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  t: (key: string) => string;
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
+const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, t }) => {
   if (!isOpen) return null;
 
   return (
@@ -24,30 +26,26 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
           <X className="w-6 h-6" />
         </button>
         
-        <h2 className="text-2xl font-bold text-center text-white mb-4">Payment Information</h2>
-        <p className="text-center text-gray-400 mb-6">Please complete the payment via bank transfer using the details below. Your account will be activated once payment is confirmed.</p>
+        <h2 className="text-2xl font-bold text-center text-white mb-4">{t('payment_title')}</h2>
+        <p className="text-center text-gray-400 mb-6">{t('payment_subtitle')}</p>
 
         <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-6 space-y-4">
           <div>
-            <p className="text-sm font-semibold text-gray-400">Bank Name</p>
-            <p className="text-lg text-white">Attijariwafa Bank</p>
+            <p className="text-sm font-semibold text-gray-400">{t('payment_holder_name_label')}</p>
+            <p className="text-lg text-white">{t('payment_holder_name_value')}</p>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-400">Account Holder Name</p>
-            <p className="text-lg text-white">Mohamed Elkarakhi</p>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-400">RIB (Bank Account Number)</p>
+            <p className="text-sm font-semibold text-gray-400">{t('payment_rib_label')}</p>
             <p className="text-lg font-mono text-amber-400 tracking-wider">857 780 0000000000585442 28</p>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-400">Reference / Reason for Transfer</p>
-            <p className="text-lg text-white">Your Signup Email Address</p>
+            <p className="text-sm font-semibold text-gray-400">{t('payment_reference_label')}</p>
+            <p className="text-lg text-white">{t('payment_reference_value')}</p>
           </div>
         </div>
 
         <p className="text-xs text-gray-500 mt-6 text-center">
-            Account approval may take up to 24 hours after payment is received.
+            {t('payment_confirmation_note')}
         </p>
 
         <div className="mt-8 text-center">
@@ -55,7 +53,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose }) => {
              onClick={onClose}
              className="bg-amber-400 text-gray-900 font-semibold py-2 px-6 rounded-lg hover:bg-amber-500 transition-colors duration-300"
            >
-             Done
+             {t('payment_done_button')}
            </button>
         </div>
       </div>

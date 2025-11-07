@@ -1,36 +1,38 @@
+
 import React from 'react';
 import { CreditCard, Check } from './icons';
 
 interface PricingPageProps {
   onPayClick: (plan: string) => void;
+  t: (key: string) => string;
 }
 
-const PricingPage: React.FC<PricingPageProps> = ({ onPayClick }) => {
+const PricingPage: React.FC<PricingPageProps> = ({ onPayClick, t }) => {
   const plans = [
     {
-      name: 'Standard Plan',
+      name: t('plan_standard_name'),
       price: '49',
-      description: 'Perfect for individual workers or small teams who want visibility and client access at an affordable price.',
+      description: t('plan_standard_desc'),
       features: [
-        '🔹 Standard listing placement on Brikole',
-        '📍 Regular visibility in the “Near Me” map feature',
-        '💬 Access to standard customer support',
-        '🤝 Limited participation in our referral program',
+        t('plan_standard_feature_1'),
+        t('plan_standard_feature_2'),
+        t('plan_standard_feature_3'),
+        t('plan_standard_feature_4'),
       ],
-      cta: 'Choose Standard',
+      cta: t('plan_standard_cta'),
     },
     {
-      name: 'Premium Plan',
+      name: t('plan_premium_name'),
       price: '149',
-      description: 'Designed for professionals who want maximum exposure, credibility, and priority service.',
+      description: t('plan_premium_desc'),
       features: [
-        '🌟 Top placement within the first 3 pages of listings',
-        '📍 Highlighted position in the “Near Me” map feature',
-        '✅ Verified Provider Badge for higher trust and visibility',
-        '🕐 24/7 Priority Support via chat or phone',
-        '💎 Full access to our Premium Referral Program',
+        t('plan_premium_feature_1'),
+        t('plan_premium_feature_2'),
+        t('plan_premium_feature_3'),
+        t('plan_premium_feature_4'),
+        t('plan_premium_feature_5'),
       ],
-      cta: 'Choose Premium',
+      cta: t('plan_premium_cta'),
       isFeatured: true,
     },
   ];
@@ -48,22 +50,22 @@ const PricingPage: React.FC<PricingPageProps> = ({ onPayClick }) => {
         <div className="inline-block p-3 mb-4 bg-amber-400/10 border border-amber-400/20 rounded-lg">
           <CreditCard className="w-8 h-8 text-amber-400" />
         </div>
-        <h1 className="text-4xl font-bold text-white mb-3">Choose Your Plan</h1>
-        <p className="text-lg text-gray-400 mb-2">Your profile is submitted and pending review.</p>
-        <p className="text-lg text-gray-400 mb-10">Select a plan to activate your account upon approval.</p>
+        <h1 className="text-4xl font-bold text-white mb-3">{t('pricing_title')}</h1>
+        <p className="text-lg text-gray-400 mb-2">{t('pricing_subtitle_1')}</p>
+        <p className="text-lg text-gray-400 mb-10">{t('pricing_subtitle_2')}</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {plans.map(plan => (
             <div key={plan.name} className={`relative bg-gray-800/50 border rounded-xl p-8 flex flex-col ${plan.isFeatured ? 'border-amber-400' : 'border-gray-700'}`}>
               {plan.isFeatured && (
                 <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
-                  <span className="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full uppercase">Most Popular</span>
+                  <span className="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full uppercase">{t('plan_featured_badge')}</span>
                 </div>
               )}
               <h2 className="text-2xl font-semibold text-white">{plan.name}</h2>
               <div className="my-6">
                 <span className="text-5xl font-bold text-white">{plan.price}</span>
-                <span className="text-lg text-gray-400"> MAD/month</span>
+                <span className="text-lg text-gray-400"> {t('price_unit')}</span>
               </div>
               <p className="text-gray-400 text-sm mb-6 text-left min-h-[60px]">{plan.description}</p>
               <ul className="space-y-3 text-left flex-grow">

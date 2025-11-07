@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Language, Professional } from './types';
 import { TRANSLATIONS, SERVICE_CATEGORIES, PROFESSIONALS } from './constants';
@@ -203,7 +204,7 @@ const App: React.FC = () => {
 
     if (route === '#/admin' && isAdminUser) return <AdminDashboard />;
     if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
-    if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} />;
+    if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} t={t} />;
     
     return <MainContent language={language} t={t} onViewProfile={handleViewProfile} />;
   };
@@ -230,7 +231,7 @@ const App: React.FC = () => {
         onClose={() => setShowOnboardingModal(false)}
         onSuccess={() => setShowOnboardingModal(false)}
       />
-      <PaymentModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} />
+      <PaymentModal isOpen={showPaymentModal} onClose={() => setShowPaymentModal(false)} t={t} />
       <ProProfileModal
         isOpen={!!selectedPro}
         onClose={handleCloseProProfile}
