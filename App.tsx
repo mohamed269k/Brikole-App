@@ -19,6 +19,8 @@ import PricingPage from './components/PricingPage';
 import PaymentModal from './components/PaymentModal';
 import { getSupabase } from './lib/supabaseClient';
 import ProProfileModal from './components/ProProfileModal';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import UsageGuidelinesPage from './components/UsageGuidelinesPage';
 
 const MainContent: React.FC<{
   language: Language;
@@ -205,6 +207,8 @@ const App: React.FC = () => {
     if (route === '#/admin' && isAdminUser) return <AdminDashboard />;
     if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
     if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} t={t} />;
+    if (route === '#/privacy') return <PrivacyPolicyPage t={t} />;
+    if (route === '#/guidelines') return <UsageGuidelinesPage t={t} />;
     
     return <MainContent language={language} t={t} onViewProfile={handleViewProfile} />;
   };
