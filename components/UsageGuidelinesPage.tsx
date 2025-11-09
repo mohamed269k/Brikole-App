@@ -21,41 +21,41 @@ const UsageGuidelinesPage: React.FC<StaticPageProps> = ({ t }) => {
           .prose-styles li { margin-bottom: 0.5rem; }
         `}</style>
         <div className="prose-styles">
-          <h1>Usage Guidelines</h1>
-          <p><strong>Effective Date:</strong> {new Date().toLocaleDateString()}</p>
+          <h1>{t('guidelines_title')}</h1>
+          <p><strong>{t('effective_date')}</strong> {new Date().toLocaleDateString()}</p>
           
-          <h2>1. Introduction</h2>
-          <p>Welcome to Brikole! Our mission is to create a safe, reliable, and respectful community for clients and service providers. These guidelines are designed to ensure a positive experience for everyone. By using our platform, you agree to abide by these rules.</p>
+          <h2>{t('guidelines_h2_intro')}</h2>
+          <p>{t('guidelines_p_intro')}</p>
           
-          <h2>2. For Clients</h2>
+          <h2>{t('guidelines_h2_for_clients')}</h2>
           <ul>
-            <li><strong>Be Clear and Accurate:</strong> Provide clear and detailed descriptions of the service you need. The more information you provide, the better a professional can assist you.</li>
-            <li><strong>Communicate Respectfully:</strong> Treat service providers with courtesy and respect. Clear, polite communication is key to a successful service experience.</li>
-            <li><strong>Safety First:</strong> Ensure a safe working environment for the service provider. Secure any pets and clear the work area of obstacles.</li>
-            <li><strong>Honest Reviews:</strong> Provide fair and honest feedback based on your experience. Reviews help our community and maintain high standards.</li>
+            <li><strong>{t('guidelines_li_client_1_title')}</strong> {t('guidelines_li_client_1_desc')}</li>
+            <li><strong>{t('guidelines_li_client_2_title')}</strong> {t('guidelines_li_client_2_desc')}</li>
+            <li><strong>{t('guidelines_li_client_3_title')}</strong> {t('guidelines_li_client_3_desc')}</li>
+            <li><strong>{t('guidelines_li_client_4_title')}</strong> {t('guidelines_li_client_4_desc')}</li>
           </ul>
 
-          <h2>3. For Service Providers</h2>
+          <h2>{t('guidelines_h2_for_providers')}</h2>
           <ul>
-            <li><strong>Professionalism is Key:</strong> Present yourself professionally at all times. This includes your appearance, communication, and conduct on the job.</li>
-            <li><strong>Quality Workmanship:</strong> Complete all jobs to the best of your ability and to a high standard. Do not cut corners or use substandard materials.</li>
-            <li><strong>Transparent Pricing:</strong> Be clear and upfront about your pricing before starting any work. Avoid hidden fees or surprise charges.</li>
-            <li><strong>Punctuality and Reliability:</strong> Arrive on time for appointments. If you are delayed, communicate this to the client as soon as possible.</li>
-            <li><strong>Respect Client Property:</strong> Treat the client's home and belongings with care and respect. Leave the work area clean and tidy upon completion.</li>
+            <li><strong>{t('guidelines_li_provider_1_title')}</strong> {t('guidelines_li_provider_1_desc')}</li>
+            <li><strong>{t('guidelines_li_provider_2_title')}</strong> {t('guidelines_li_provider_2_desc')}</li>
+            <li><strong>{t('guidelines_li_provider_3_title')}</strong> {t('guidelines_li_provider_3_desc')}</li>
+            <li><strong>{t('guidelines_li_provider_4_title')}</strong> {t('guidelines_li_provider_4_desc')}</li>
+            <li><strong>{t('guidelines_li_provider_5_title')}</strong> {t('guidelines_li_provider_5_desc')}</li>
           </ul>
           
-          <h2>4. Prohibited Activities</h2>
-          <p>The following activities are strictly prohibited on the Brikole platform:</p>
+          <h2>{t('guidelines_h2_prohibited')}</h2>
+          <p>{t('guidelines_p_prohibited')}</p>
           <ul>
-            <li>Any form of harassment, discrimination, or hate speech.</li>
-            <li>Illegal activities or requests for illegal services.</li>
-            <li>Fraud, spam, or misleading information.</li>
-            <li>Taking transactions off-platform to avoid fees or platform oversight.</li>
-            <li>Posting false or defamatory reviews.</li>
+            <li>{t('guidelines_li_prohibited_1')}</li>
+            <li>{t('guidelines_li_prohibited_2')}</li>
+            <li>{t('guidelines_li_prohibited_3')}</li>
+            <li>{t('guidelines_li_prohibited_4')}</li>
+            <li>{t('guidelines_li_prohibited_5')}</li>
           </ul>
 
-          <h2>5. Enforcement</h2>
-          <p>Violations of these guidelines may result in a warning, temporary suspension, or permanent removal from the platform.</p>
+          <h2>{t('guidelines_h2_enforcement')}</h2>
+          <p>{t('guidelines_p_enforcement')}</p>
         </div>
       </div>
     </main>

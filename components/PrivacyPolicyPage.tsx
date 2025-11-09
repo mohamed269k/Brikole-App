@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface StaticPageProps {
@@ -22,47 +21,47 @@ const PrivacyPolicyPage: React.FC<StaticPageProps> = ({ t }) => {
           .prose-styles li { margin-bottom: 0.5rem; }
         `}</style>
         <div className="prose-styles">
-          <h1>Privacy Policy</h1>
-          <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+          <h1>{t('privacy_policy_title')}</h1>
+          <p><strong>{t('last_updated')}</strong> {new Date().toLocaleDateString()}</p>
 
-          <h2>1. Introduction</h2>
-          <p>Welcome to Brikole Home Services ("Brikole", "we", "us", or "our"). We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our platform. By using Brikole, you agree to the collection and use of information in accordance with this policy.</p>
+          <h2>{t('privacy_h2_intro')}</h2>
+          <p>{t('privacy_p_intro')}</p>
 
-          <h2>2. Information We Collect</h2>
-          <p>We may collect information about you in a variety of ways. The information we may collect on the platform includes:</p>
+          <h2>{t('privacy_h2_info_collect')}</h2>
+          <p>{t('privacy_p_info_collect')}</p>
           <ul>
-            <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, email address, phone number, and location, that you voluntarily give to us when you register with the platform.</li>
-            <li><strong>Usage Data:</strong> Information our servers automatically collect when you access the platform, such as your IP address, browser type, operating system, access times, and the pages you have viewed directly before and after accessing the platform.</li>
-            <li><strong>Geolocation Information:</strong> We may request access or permission to and track location-based information from your mobile device, either continuously or while you are using our application, to provide location-based services.</li>
+            <li><strong>{t('privacy_li_personal_data_title')}</strong> {t('privacy_li_personal_data_desc')}</li>
+            <li><strong>{t('privacy_li_usage_data_title')}</strong> {t('privacy_li_usage_data_desc')}</li>
+            <li><strong>{t('privacy_li_geolocation_title')}</strong> {t('privacy_li_geolocation_desc')}</li>
           </ul>
 
-          <h2>3. How We Use Your Information</h2>
-          <p>Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the platform to:</p>
+          <h2>{t('privacy_h2_how_we_use')}</h2>
+          <p>{t('privacy_p_how_we_use')}</p>
           <ul>
-            <li>Create and manage your account.</li>
-            <li>Connect you with service providers for your requested services.</li>
-            <li>Email you regarding your account or order.</li>
-            <li>Improve our platform and offerings.</li>
-            <li>Monitor and analyze usage and trends to improve your experience.</li>
-            <li>Notify you of updates to the platform.</li>
-            <li>Resolve disputes and troubleshoot problems.</li>
+            <li>{t('privacy_li_use_1')}</li>
+            <li>{t('privacy_li_use_2')}</li>
+            <li>{t('privacy_li_use_3')}</li>
+            <li>{t('privacy_li_use_4')}</li>
+            <li>{t('privacy_li_use_5')}</li>
+            <li>{t('privacy_li_use_6')}</li>
+            <li>{t('privacy_li_use_7')}</li>
           </ul>
 
-          <h2>4. Disclosure of Your Information</h2>
-          <p>We may share information we have collected about you in certain situations. Your information may be disclosed as follows:</p>
+          <h2>{t('privacy_h2_disclosure')}</h2>
+          <p>{t('privacy_p_disclosure')}</p>
           <ul>
-            <li><strong>By Law or to Protect Rights:</strong> If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law.</li>
-            <li><strong>With Service Providers:</strong> We will share your information (such as your name, contact details, and service location) with service providers to enable them to perform the requested service.</li>
+            <li><strong>{t('privacy_li_disclosure_1_title')}</strong> {t('privacy_li_disclosure_1_desc')}</li>
+            <li><strong>{t('privacy_li_disclosure_2_title')}</strong> {t('privacy_li_disclosure_2_desc')}</li>
           </ul>
           
-          <h2>5. Security of Your Information</h2>
-          <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
+          <h2>{t('privacy_h2_security')}</h2>
+          <p>{t('privacy_p_security')}</p>
 
-          <h2>6. Changes to This Privacy Policy</h2>
-          <p>We may update this Privacy Policy from time to time in order to reflect, for example, changes to our practices or for other operational, legal, or regulatory reasons. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+          <h2>{t('privacy_h2_changes')}</h2>
+          <p>{t('privacy_p_changes')}</p>
 
-          <h2>7. Contact Us</h2>
-          <p>If you have questions or comments about this Privacy Policy, please contact us at: support@brikole.ma</p>
+          <h2>{t('privacy_h2_contact')}</h2>
+          <p>{t('privacy_p_contact')}</p>
         </div>
       </div>
     </main>
