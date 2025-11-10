@@ -21,6 +21,8 @@ import { getSupabase } from './lib/supabaseClient';
 import ProProfileModal from './components/ProProfileModal';
 import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import UsageGuidelinesPage from './components/UsageGuidelinesPage';
+import SupportPage from './components/SupportPage';
+import ContactPage from './components/ContactPage';
 
 const MainContent: React.FC<{
   language: Language;
@@ -155,7 +157,7 @@ const App: React.FC = () => {
   
   useEffect(() => {
     if (!user) {
-        if (['#/admin', '#/provider-onboarding', '#/pricing'].includes(route)) {
+        if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support'].includes(route)) {
             window.location.hash = '/';
         }
         return;
@@ -204,11 +206,13 @@ const App: React.FC = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
 
-    if (route === '#/admin' && isAdminUser) return <AdminDashboard />;
+    if (route === '#/admin' && isAdminUser) return <AdminDashboard t={t} />;
+    if (route === '#/support' && user) return <SupportPage t={t} />;
     if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
     if (route === '#/pricing' && isProvider) return <PricingPage onPayClick={() => setShowPaymentModal(true)} t={t} />;
     if (route === '#/privacy') return <PrivacyPolicyPage t={t} />;
     if (route === '#/guidelines') return <UsageGuidelinesPage t={t} />;
+    if (route === '#/contact') return <ContactPage t={t} />;
     
     return <MainContent language={language} t={t} onViewProfile={handleViewProfile} />;
   };

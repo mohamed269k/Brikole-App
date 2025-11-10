@@ -25,17 +25,15 @@ const Footer: React.FC<FooterProps> = ({ t }) => {
     <footer className="bg-gray-900 border-t border-gray-800">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-          <div>
+          <div className="md:col-span-2">
             <div className="mb-4">
                <FooterLogo />
             </div>
-            <p className="text-gray-400">{t('sub_heading').substring(0, 80)}...</p>
-          </div>
-          <div>
-            {/* Can add more links here if needed */}
+            <p className="text-gray-400 max-w-md mx-auto md:mx-0">{t('sub_heading')}</p>
           </div>
           <div className="flex flex-col items-center md:items-start gap-2">
-            <h3 className="font-semibold text-white mb-2">{t('footer_legal')}</h3>
+            <h3 className="font-semibold text-white mb-2">{t('footer_company')}</h3>
+            <a href="#/contact" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_contact')}</a>
             <a href="#/privacy" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_privacy_policy')}</a>
             <a href="#/guidelines" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_usage_guidelines')}</a>
           </div>

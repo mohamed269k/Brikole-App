@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { User as UserIcon, ChevronDown } from './icons';
+import { User as UserIcon, ChevronDown, MessageSquare } from './icons';
 
 interface UserMenuProps {
   user: SupabaseUser;
@@ -43,9 +43,20 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, onLogout, onProfileClick }) =
               onProfileClick();
               setIsOpen(false);
             }}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
+            className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
           >
-            Profile
+            <UserIcon className="w-4 h-4 text-gray-400" />
+            <span>Profile</span>
+          </button>
+           <button
+            onClick={() => {
+              window.location.hash = '/support';
+              setIsOpen(false);
+            }}
+            className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
+          >
+            <MessageSquare className="w-4 h-4 text-gray-400" />
+            <span>Support</span>
           </button>
           <div className="border-t border-gray-700 my-1"></div>
           <button

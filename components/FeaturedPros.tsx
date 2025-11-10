@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { SERVICE_CATEGORIES } from '../constants';
 import { Language, Professional } from '../types';
 import ProCard from './ProCard';
-import { ChevronLeftIcon, ChevronRightIcon } from './icons';
+//- Fix: Renamed icon imports for consistency with icons.tsx
+import { ChevronLeft, ChevronRight } from './icons';
 
 interface FeaturedProsProps {
   t: (key: string) => string;
@@ -102,7 +103,8 @@ const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professiona
                 className="p-2 rounded-md bg-gray-800 hover:bg-amber-400/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 aria-label={t('previous')}
               >
-                <ChevronLeftIcon className="w-5 h-5" />
+                {/* //- Fix: Use renamed ChevronLeft component */}
+                <ChevronLeft className="w-5 h-5" />
               </button>
 
               {[...Array(totalPages)].map((_, i) => (
@@ -127,7 +129,8 @@ const FeaturedPros: React.FC<FeaturedProsProps> = ({ t, currentLang, professiona
                 className="p-2 rounded-md bg-gray-800 hover:bg-amber-400/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 aria-label={t('next')}
               >
-                <ChevronRightIcon className="w-5 h-5" />
+                {/* //- Fix: Use renamed ChevronRight component */}
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           )}
