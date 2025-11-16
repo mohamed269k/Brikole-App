@@ -1,0 +1,153 @@
+import React, { useState, useEffect } from 'react';
+import { getSupabase } from '../lib/supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
+import { Loader } from './icons';
+
+interface AuthPageProps {
+  t: (key: string) => string;
+  initialMode: 'login' | 'signup';
+}
+
+const AuthPage: React.FC<AuthPageProps> = ({ t, initialMode }) => {
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'client' | 'provider'>('client');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const { isSupabaseConfigured } = useAuth();
+
+  useEffect(() => {
+    setIsLogin(initialMode === 'login');
+    setError(null);
+    setMessage(null);
+  }, [initialMode]);
+
+  const handleAuthAction = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    const { client: supabase } = getSupabase();
+
+    if (!supabase) {
+      setError("Authentication service is currently unavailable.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        window.location.hash = '/';
+      } else {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              role: role,
+            },
+          },
+        });
+        if (error) throw error;
+
+        if (data.user?.email_confirmed_at) {
+          setError('This email is already registered. Please use the Sign In tab.');
+        } else {
+          setMessage('Check your email for the confirmation link!');
+        }
+      }
+    } catch (err: any) {
+      setError(err.error_description || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="flex-grow container mx-auto px-4 py-8 md:py-16 flex items-center justify-center">
+      <div 
+        className="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl shadow-black/30 w-full max-w-md p-8 relative"
+      >
+        {isSupabaseConfigured ? (
+          <>
+            <div className="flex border-b border-gray-700 mb-6">
+              <a 
+                href="#/login"
+                className={`w-1/2 text-center py-3 font-semibold transition-colors ${isLogin ? 'text-amber-400 border-b-2 border-amber-400' : 'text-gray-400 hover:text-white'}`}
+              >
+                Sign In
+              </a>
+              <a 
+                href="#/signup"
+                className={`w-1/2 text-center py-3 font-semibold transition-colors ${!isLogin ? 'text-amber-400 border-b-2 border-amber-400' : 'text-gray-400 hover:text-white'}`}
+              >
+                Sign Up
+              </a>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-center text-white mb-6">{isLogin ? 'Welcome Back' : 'Create Your Account'}</h2>
+            
+            <form onSubmit={handleAuthAction}>
+              <div className="space-y-4">
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="block w-full p-3 text-md text-gray-100 border border-gray-600 rounded-lg bg-gray-900 focus:ring-amber-500 focus:border-amber-500 placeholder-gray-400 transition-colors"
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full p-3 text-md text-gray-100 border border-gray-600 rounded-lg bg-gray-900 focus:ring-amber-500 focus:border-amber-500 placeholder-gray-400 transition-colors"
+                  required
+                />
+              </div>
+              
+              {!isLogin && (
+                <div className="mt-6">
+                  <p className="text-gray-300 mb-3 font-medium">I am a:</p>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 p-3 border border-gray-600 rounded-lg cursor-pointer flex-1 hover:bg-gray-700 transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10">
+                      <input type="radio" name="role" value="client" checked={role === 'client'} onChange={() => setRole('client')} className="accent-amber-400" />
+                      <span className="text-gray-200">Client (Looking for a service)</span>
+                    </label>
+                    <label className="flex items-center gap-2 p-3 border border-gray-600 rounded-lg cursor-pointer flex-1 hover:bg-gray-700 transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10">
+                      <input type="radio" name="role" value="provider" checked={role === 'provider'} onChange={() => setRole('provider')} className="accent-amber-400" />
+                      <span className="text-gray-200">Provider (Offering a service)</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-6 text-gray-900 bg-amber-400 hover:bg-amber-500 focus:ring-4 focus:outline-none focus:ring-amber-300 font-semibold rounded-lg text-md px-6 py-3 transition-colors duration-300 flex items-center justify-center disabled:bg-gray-500 disabled:cursor-not-allowed"
+              >
+                {loading ? <Loader className="w-6 h-6" /> : (isLogin ? 'Sign In' : 'Create Account')}
+              </button>
+            </form>
+
+            {error && <p className="mt-4 text-center text-red-400 bg-red-400/10 p-3 rounded-lg">{error}</p>}
+            {message && <p className="mt-4 text-center text-green-400 bg-green-400/10 p-3 rounded-lg">{message}</p>}
+          </>
+        ) : (
+          <div className="p-8 text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">Authentication Unavailable</h2>
+            <p className="text-gray-400">The login service is not configured. Please contact the site administrator.</p>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+};
+
+export default AuthPage;

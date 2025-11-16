@@ -10,7 +10,6 @@ interface HeaderProps {
   currentLang: Language;
   setLang: (lang: Language) => void;
   t: (key: string) => string;
-  onLoginClick: () => void;
   onProfileClick: () => void;
 }
 
@@ -28,7 +27,7 @@ const Logo: React.FC = () => (
   </div>
 );
 
-const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick, onProfileClick }) => {
+const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onProfileClick }) => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -57,12 +56,12 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onLoginClick, 
         session && user ? (
           <UserMenu user={user} onLogout={signOut} onProfileClick={onProfileClick} />
         ) : (
-          <button 
-            onClick={onLoginClick}
+          <a 
+            href="#/login"
             className="bg-amber-400 text-gray-900 font-semibold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors duration-300"
           >
             {t('login_signup')}
-          </button>
+          </a>
         )
       )}
       <div className="relative" ref={langRef}>

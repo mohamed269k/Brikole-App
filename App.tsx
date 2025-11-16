@@ -10,7 +10,7 @@ import Footer from './components/Footer';
 import FeaturedPros from './components/FeaturedPros';
 import CityFilter from './components/CityFilter';
 import MapSection from './components/MapSection';
-import AuthModal from './components/AuthModal';
+import AuthPage from './components/AuthPage';
 import ProfileModal from './components/ProfileModal';
 import OnboardingModal from './components/OnboardingModal';
 import AdminDashboard from './components/AdminDashboard';
@@ -140,7 +140,6 @@ const MainContent: React.FC<{
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('fr');
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -156,6 +155,11 @@ const App: React.FC = () => {
   }, []);
   
   useEffect(() => {
+    if (user && (route === '#/login' || route === '#/signup')) {
+      window.location.hash = '/';
+      return;
+    }
+
     if (!user) {
         if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support'].includes(route)) {
             window.location.hash = '/';
@@ -206,6 +210,8 @@ const App: React.FC = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
 
+    if (route === '#/login') return <AuthPage t={t} initialMode="login" />;
+    if (route === '#/signup') return <AuthPage t={t} initialMode="signup" />;
     if (route === '#/admin' && isAdminUser) return <AdminDashboard t={t} />;
     if (route === '#/support' && user) return <SupportPage t={t} />;
     if (route === '#/provider-onboarding' && isProvider) return <ProviderOnboarding />;
@@ -224,7 +230,6 @@ const App: React.FC = () => {
           currentLang={language} 
           setLang={setLanguage} 
           t={t} 
-          onLoginClick={() => setShowAuthModal(true)}
           onProfileClick={() => setShowProfileModal(true)}
         />
         
@@ -232,7 +237,6 @@ const App: React.FC = () => {
         
         <Footer t={t} />
       </div>
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       <ProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
       <OnboardingModal 
         isOpen={showOnboardingModal} 
