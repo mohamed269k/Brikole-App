@@ -4,7 +4,7 @@ import { Language } from '../types';
 import { LANGUAGES } from '../constants';
 import { useAuth } from '../contexts/AuthContext';
 import UserMenu from './UserMenu';
-import { Globe, Menu, X, Wrench } from './icons';
+import { Globe, Menu, X, Wrench, List, UserPlus } from './icons';
 
 interface HeaderProps {
   currentLang: Language;
@@ -32,6 +32,10 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onProfileClick
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
   const { session, user, signOut, isSupabaseConfigured } = useAuth();
+  
+  const isClient = user?.user_metadata?.role === 'client';
+  const isProvider = user?.user_metadata?.role === 'provider';
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,7 +58,21 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onProfileClick
     <>
       {isSupabaseConfigured && (
         session && user ? (
-          <UserMenu user={user} onLogout={signOut} onProfileClick={onProfileClick} />
+          <>
+            {isClient && (
+              <a href="#/post-job" className="flex items-center gap-2 text-gray-200 hover:text-amber-400 transition-colors font-medium">
+                <UserPlus className="w-5 h-5" />
+                <span>{t('post_a_job')}</span>
+              </a>
+            )}
+            {isProvider && (
+              <a href="#/jobs" className="flex items-center gap-2 text-gray-200 hover:text-amber-400 transition-colors font-medium">
+                <List className="w-5 h-5" />
+                <span>{t('job_board')}</span>
+              </a>
+            )}
+            <UserMenu user={user} onLogout={signOut} onProfileClick={onProfileClick} t={t} />
+          </>
         ) : (
           <a 
             href="#/login"

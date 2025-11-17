@@ -23,6 +23,9 @@ import PrivacyPolicyPage from './components/PrivacyPolicyPage';
 import UsageGuidelinesPage from './components/UsageGuidelinesPage';
 import SupportPage from './components/SupportPage';
 import ContactPage from './components/ContactPage';
+import JobPostPage from './components/JobPostPage';
+import JobBoardPage from './components/JobBoardPage';
+import MyActivityPage from './components/MyActivityPage';
 
 const MainContent: React.FC<{
   language: Language;
@@ -161,7 +164,7 @@ const App: React.FC = () => {
     }
 
     if (!user) {
-        if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support'].includes(route)) {
+        if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support', '#/post-job', '#/jobs', '#/my-activity'].includes(route)) {
             window.location.hash = '/';
         }
         return;
@@ -180,13 +183,14 @@ const App: React.FC = () => {
         } else if (profileSubmitted && route === '#/provider-onboarding') {
             window.location.hash = '/pricing';
         }
+        if (route === '#/post-job') window.location.hash = '/';
     } else if (isClient) {
         const hasOnboarded = !!user.user_metadata?.full_name;
         if (!hasOnboarded) {
           const timer = setTimeout(() => setShowOnboardingModal(true), 500);
           return () => clearTimeout(timer);
         }
-        if (['#/provider-onboarding', '#/pricing', '#/admin'].includes(route)) {
+        if (['#/provider-onboarding', '#/pricing', '#/admin', '#/jobs'].includes(route)) {
             window.location.hash = '/';
         }
     }
@@ -209,6 +213,7 @@ const App: React.FC = () => {
   const renderContent = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
+    const isClient = user?.user_metadata?.role === 'client';
 
     if (route === '#/login') return <AuthPage t={t} initialMode="login" />;
     if (route === '#/signup') return <AuthPage t={t} initialMode="signup" />;
@@ -219,6 +224,9 @@ const App: React.FC = () => {
     if (route === '#/privacy') return <PrivacyPolicyPage t={t} />;
     if (route === '#/guidelines') return <UsageGuidelinesPage t={t} />;
     if (route === '#/contact') return <ContactPage t={t} />;
+    if (route === '#/post-job' && isClient) return <JobPostPage t={t} />;
+    if (route === '#/jobs' && isProvider) return <JobBoardPage t={t} currentLang={language} />;
+    if (route === '#/my-activity' && user) return <MyActivityPage t={t} currentLang={language} />;
     
     return <MainContent language={language} t={t} onViewProfile={handleViewProfile} />;
   };

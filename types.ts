@@ -6,7 +6,7 @@ export type { User, Session };
 export type Language = 'en' | 'fr' | 'ar';
 
 export interface TranslationSet {
-  [key: string]: string;
+  [key:string]: string;
 }
 
 export interface ServiceCategory {
@@ -69,4 +69,32 @@ export interface ContactMessage {
   subject?: string;
   message: string;
   status: 'new' | 'archived';
+}
+
+export interface JobPost {
+  id: string;
+  created_at: string;
+  client_id: string;
+  title: string;
+  description: string;
+  category_id: string;
+  budget: number;
+  budget_type: 'fixed' | 'negotiable';
+  location_city: string;
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled';
+  awarded_to_provider_id?: string | null;
+  client_email?: string;
+}
+
+export interface JobOffer {
+    id: string;
+    created_at: string;
+    job_post_id: string;
+    provider_id: string;
+    offer_amount: number;
+    message?: string;
+    status: 'pending' | 'accepted' | 'rejected';
+    provider_name?: string;
+    provider_email?: string;
+    provider_phone?: string;
 }
