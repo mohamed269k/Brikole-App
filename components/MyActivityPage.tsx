@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { JobPost, JobOffer, Language } from '../types';
 import { getSupabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader, Briefcase, FileText } from './icons';
+import { Loader, Briefcase, FileText, Trash } from './icons';
 import ViewOffersModal from './ViewOffersModal';
 import { SERVICE_CATEGORIES } from '../constants';
 
@@ -39,19 +39,38 @@ const MyJobsView: React.FC<{ t: (key: string) => string, currentLang: Language }
     const [jobs, setJobs] = useState<JobPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedJob, setSelectedJob] = useState<JobPost | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+
+    const fetchJobs = useCallback(async () => {
+        if (!user) return;
+        const { client: supabase } = getSupabase();
+        if (!supabase) return;
+        setLoading(true);
+        const { data } = await supabase.from('job_posts').select('*').eq('client_id', user.id).order('created_at', { ascending: false });
+        setJobs(data || []);
+        setLoading(false);
+    }, [user]);
 
     useEffect(() => {
-        const fetchJobs = async () => {
-            if (!user) return;
-            const { client: supabase } = getSupabase();
-            if (!supabase) return;
-            setLoading(true);
-            const { data } = await supabase.from('job_posts').select('*').eq('client_id', user.id).order('created_at', { ascending: false });
-            setJobs(data || []);
-            setLoading(false);
-        };
         fetchJobs();
-    }, [user]);
+    }, [fetchJobs]);
+
+    const handleDeleteJob = async (jobId: string) => {
+        if (!window.confirm(t('confirm_delete_job'))) return;
+
+        setDeletingId(jobId);
+        const { client: supabase } = getSupabase();
+        if (!supabase) return;
+
+        const { error } = await supabase.from('job_posts').delete().eq('id', jobId);
+
+        if (error) {
+            alert('Error deleting job: ' + error.message);
+        } else {
+            fetchJobs();
+        }
+        setDeletingId(null);
+    };
 
     if (loading) return <div className="flex justify-center p-8"><Loader /></div>;
     if (jobs.length === 0) return <p className="text-center text-gray-500 p-8">{t('no_open_jobs')}</p>;
@@ -59,13 +78,23 @@ const MyJobsView: React.FC<{ t: (key: string) => string, currentLang: Language }
     return (
         <div className="space-y-4">
             {jobs.map(job => (
-                <div key={job.id} className="bg-gray-900/70 p-4 rounded-lg border border-gray-700">
+                <div key={job.id} className="bg-gray-900/70 p-4 rounded-lg border border-gray-700 relative">
                     <div className="flex justify-between items-start gap-4">
                         <div>
                             <p className="font-bold text-white">{job.title}</p>
                             <p className="text-sm text-gray-400">{job.location_city}</p>
                         </div>
-                        <JobStatusBadge status={job.status} />
+                        <div className="flex flex-col items-end gap-2">
+                            <JobStatusBadge status={job.status} />
+                             <button 
+                                onClick={() => handleDeleteJob(job.id)} 
+                                disabled={deletingId === job.id}
+                                className="text-red-400 hover:text-red-300 transition-colors p-1 rounded-md hover:bg-red-400/10"
+                                title={t('delete_job')}
+                            >
+                                {deletingId === job.id ? <Loader className="w-4 h-4" /> : <Trash className="w-4 h-4" />}
+                            </button>
+                        </div>
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-700 flex justify-end">
                         <button onClick={() => setSelectedJob(job)} className="text-sm font-semibold text-amber-400 hover:underline">{t('view_offers')}</button>

@@ -1,19 +1,21 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { List, Loader, UserPlus, Ticket, ChevronLeft, Send, X, Mail, ArchiveBox } from './icons';
+import { List, Loader, UserPlus, Ticket, ChevronLeft, Send, X, Mail, ArchiveBox, Briefcase, Trash } from './icons';
 import { getSupabase } from '../lib/supabaseClient';
-import { ProviderRequest, SupportTicket, TicketReply, ContactMessage } from '../types';
+import { ProviderRequest, SupportTicket, TicketReply, ContactMessage, JobPost } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 
-const StatusBadge: React.FC<{ status: SupportTicket['status'] }> = ({ status }) => {
-    const baseClasses = "px-2 py-1 text-xs font-semibold rounded-full";
-    const statusMap = {
-        open: { text: "Open", classes: "bg-green-500/20 text-green-300" },
-        in_progress: { text: "In Progress", classes: "bg-yellow-500/20 text-yellow-300" },
-        closed: { text: "Closed", classes: "bg-gray-600/20 text-gray-400" },
+const StatusBadge: React.FC<{ status: SupportTicket['status'] | JobPost['status'] }> = ({ status }) => {
+    const baseClasses = "px-2 py-1 text-xs font-semibold rounded-full capitalize";
+    const statusMap: Record<string, string> = {
+        open: "bg-green-500/20 text-green-300",
+        in_progress: "bg-yellow-500/20 text-yellow-300",
+        closed: "bg-gray-600/20 text-gray-400",
+        completed: "bg-purple-500/20 text-purple-300",
+        cancelled: "bg-gray-600/20 text-gray-400",
     };
-    const { text, classes } = statusMap[status] || statusMap.closed;
-    return <span className={`${baseClasses} ${classes}`}>{text}</span>;
+    const classes = statusMap[status] || "bg-gray-600/20 text-gray-400";
+    return <span className={`${baseClasses} ${classes}`}>{status.replace('_', ' ')}</span>;
 };
 
 const PriorityBadge: React.FC<{ priority: SupportTicket['priority'] }> = ({ priority }) => {
@@ -152,7 +154,15 @@ const ProviderRequestsView: React.FC = () => {
     useEffect(() => { fetchRequests(); }, [fetchRequests]);
 
     const handleUpdateRequest = async (id: string, status: 'approved' | 'rejected') => {
-        // ... (implementation is the same as before)
+        const { client: supabase } = getSupabase();
+        if (!supabase) return;
+        try {
+            const { error } = await supabase.from('provider_requests').update({ status }).eq('id', id);
+            if (error) throw error;
+            fetchRequests();
+        } catch (err: any) {
+            alert(err.message);
+        }
     };
 
     if (loading) return <div className="flex justify-center items-center py-12"><Loader className="w-8 h-8 text-amber-400" /></div>;
@@ -341,11 +351,86 @@ const ContactMessagesView: React.FC<{ t: (key: string) => string; }> = ({ t }) =
     );
 };
 
+const JobPostsView: React.FC = () => {
+    const [jobs, setJobs] = useState<JobPost[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchJobs = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        const { client: supabase } = getSupabase();
+        if (!supabase) { setError("Supabase client not available."); setLoading(false); return; }
+
+        try {
+            const { data, error } = await supabase.from('job_posts').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
+            setJobs(data || []);
+        } catch (err: any) { setError(err.message); } finally { setLoading(false); }
+    }, []);
+
+    useEffect(() => { fetchJobs(); }, [fetchJobs]);
+
+    const handleDeleteJob = async (jobId: string) => {
+        if (!window.confirm('Are you sure you want to delete this job?')) return;
+
+        setDeletingId(jobId);
+        const { client: supabase } = getSupabase();
+        if (!supabase) return;
+
+        const { error } = await supabase.from('job_posts').delete().eq('id', jobId);
+
+        if (error) {
+            alert('Error deleting job: ' + error.message);
+        } else {
+            fetchJobs();
+        }
+        setDeletingId(null);
+    };
+
+    if (loading) return <div className="flex justify-center items-center py-12"><Loader className="w-8 h-8 text-amber-400" /></div>;
+    if (error) return <div className="text-center text-red-400 py-12 bg-red-900/20 rounded-lg"><p>{error}</p></div>;
+    if (jobs.length === 0) return <div className="text-center text-gray-500 py-12 bg-gray-900/50 rounded-lg"><p>No job posts found.</p></div>;
+
+    return (
+        <div className="space-y-3">
+            {jobs.map(job => (
+                <div key={job.id} className="bg-gray-900/70 p-4 rounded-lg border border-gray-700">
+                    <div className="flex justify-between items-start gap-4">
+                        <div>
+                            <p className="font-bold text-white">{job.title}</p>
+                            <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
+                                <span>{job.location_city}</span>
+                                <span>&bull;</span>
+                                <span>{job.budget} MAD</span>
+                                <span>&bull;</span>
+                                <span>Client ID: {job.client_id.slice(0, 8)}...</span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                            <StatusBadge status={job.status} />
+                             <button 
+                                onClick={() => handleDeleteJob(job.id)} 
+                                disabled={deletingId === job.id}
+                                className="flex items-center gap-2 px-3 py-1 text-xs font-semibold text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-md transition-colors"
+                            >
+                                {deletingId === job.id ? <Loader className="w-3 h-3" /> : <Trash className="w-3 h-3" />} Delete
+                            </button>
+                        </div>
+                    </div>
+                     <p className="text-xs text-gray-500 mt-2">Posted: {new Date(job.created_at).toLocaleString()}</p>
+                </div>
+            ))}
+        </div>
+    );
+};
+
 
 const AdminDashboard: React.FC<{ t: (key: string) => string; }> = ({ t }) => {
-    const [activeView, setActiveView] = useState<'requests' | 'tickets' | 'messages'>('requests');
+    const [activeView, setActiveView] = useState<'requests' | 'tickets' | 'messages' | 'jobs'>('requests');
     
-    type ViewType = 'requests' | 'tickets' | 'messages';
+    type ViewType = 'requests' | 'tickets' | 'messages' | 'jobs';
 
     const TabButton: React.FC<{ view: ViewType, icon: React.ElementType, label: string }> = ({ view, icon: Icon, label }) => (
         <button onClick={() => setActiveView(view)} className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md transition-colors ${activeView === view ? 'bg-amber-400/10 text-amber-400' : 'text-gray-400 hover:bg-gray-700/50'}`}>
@@ -366,17 +451,19 @@ const AdminDashboard: React.FC<{ t: (key: string) => string; }> = ({ t }) => {
                     </div>
                     <div>
                         <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-                        <p className="text-gray-400">Manage provider requests and support tickets.</p>
+                        <p className="text-gray-400">Manage provider requests, support tickets, and jobs.</p>
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 border-b border-gray-700 mb-6">
+                <div className="flex flex-wrap gap-2 border-b border-gray-700 mb-6 overflow-x-auto pb-2">
                     <TabButton view="requests" icon={UserPlus} label="Provider Requests" />
+                    <TabButton view="jobs" icon={Briefcase} label={t('manage_jobs')} />
                     <TabButton view="tickets" icon={Ticket} label="Support Tickets" />
                     <TabButton view="messages" icon={Mail} label={t('contact_messages')} />
                 </div>
                 
                 {activeView === 'requests' && <ProviderRequestsView />}
+                {activeView === 'jobs' && <JobPostsView />}
                 {activeView === 'tickets' && <SupportTicketsView t={t} />}
                 {activeView === 'messages' && <ContactMessagesView t={t} />}
 
