@@ -43,7 +43,6 @@ const JobPostPage: React.FC<JobPostPageProps> = ({ t }) => {
         try {
             const { error: insertError } = await supabase.from('job_posts').insert({
                 client_id: user.id,
-                client_email: user.email,
                 title,
                 description,
                 category_id: categoryId,
