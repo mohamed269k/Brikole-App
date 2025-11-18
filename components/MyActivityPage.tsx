@@ -79,7 +79,7 @@ const MyJobsView: React.FC<{ t: (key: string) => string, currentLang: Language }
 
 const MyOffersView: React.FC<{ t: (key: string) => string, currentLang: Language }> = ({ t, currentLang }) => {
     const { user } = useAuth();
-    const [offers, setOffers] = useState<(JobOffer & { job_posts: JobPost })[]>([]);
+    const [offers, setOffers] = useState<(JobOffer & { job_posts: JobPost | null })[]>([]);
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
@@ -88,20 +88,54 @@ const MyOffersView: React.FC<{ t: (key: string) => string, currentLang: Language
             const { client: supabase } = getSupabase();
             if (!supabase) return;
             setLoading(true);
-            const { data } = await supabase.from('job_offers').select('*, job_posts(*)').eq('provider_id', user.id).order('created_at', { ascending: false });
-            setOffers(data as any || []);
+
+            // 1. Fetch offers
+            const { data: offersData, error: offersError } = await supabase
+                .from('job_offers')
+                .select('*')
+                .eq('provider_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (offersError) {
+                console.error(offersError);
+                setLoading(false);
+                return;
+            }
+
+            if (!offersData || offersData.length === 0) {
+                setOffers([]);
+                setLoading(false);
+                return;
+            }
+
+            // 2. Fetch related jobs manually
+            const jobIds = offersData.map((o: any) => o.job_post_id);
+            const { data: jobsData } = await supabase
+                .from('job_posts')
+                .select('*')
+                .in('id', jobIds);
+
+            // 3. Merge
+            const mergedData = offersData.map((offer: any) => ({
+                ...offer,
+                job_posts: jobsData?.find((job: any) => job.id === offer.job_post_id) || null
+            }));
+
+            setOffers(mergedData);
             setLoading(false);
         };
         fetchOffers();
     }, [user]);
 
     if (loading) return <div className="flex justify-center p-8"><Loader /></div>;
-    if (offers.length === 0) return <p className="text-center text-gray-500 p-8">You haven't made any offers yet.</p>;
+    if (offers.length === 0) return <p className="text-center text-gray-500 p-8">{t('no_offers_yet')}</p>;
 
     return (
         <div className="space-y-4">
             {offers.map(offer => {
                 const job = offer.job_posts;
+                if (!job) return null; // Should not happen ideally
+                
                 return (
                     <div key={offer.id} className="bg-gray-900/70 p-4 rounded-lg border border-gray-700">
                         <div className="flex justify-between items-start gap-4">
@@ -128,6 +162,8 @@ const MyActivityPage: React.FC<MyActivityPageProps> = ({ t, currentLang }) => {
     const { user } = useAuth();
     const isClient = user?.user_metadata?.role === 'client';
     
+    // If role is not yet defined (e.g. legacy user), default to client view but allow switching if needed logic existed.
+    // For now, strict role check.
     const [activeTab, setActiveTab] = useState(isClient ? 'jobs' : 'offers');
 
     return (
@@ -151,8 +187,9 @@ const MyActivityPage: React.FC<MyActivityPageProps> = ({ t, currentLang }) => {
                 {isClient ? <MyJobsView t={t} currentLang={currentLang} /> : <MyOffersView t={t} currentLang={currentLang} />}
             </div>
             <style>{`
-                .tab-button { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; border-radius: 0.5rem 0.5rem 0 0; }
-                .tab-button.active { color: #fbb_f24; background-color: #1f2937; border-bottom: 2px solid #fbbf24;}
+                .tab-button { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; border-radius: 0.5rem 0.5rem 0 0; color: #9ca3af; }
+                .tab-button.active { color: #fbbf24; background-color: #1f2937; border-bottom: 2px solid #fbbf24;}
+                .tab-button:hover:not(.active) { color: #d1d5db; background-color: #374151; }
             `}</style>
         </main>
     );

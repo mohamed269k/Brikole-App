@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { JobPost, JobOffer, Language } from '../types';
 import { getSupabase } from '../lib/supabaseClient';
-import { useAuth } from '../contexts/AuthContext';
 import { X, Loader } from './icons';
 
 interface ViewOffersModalProps {
@@ -23,20 +22,52 @@ const ViewOffersModal: React.FC<ViewOffersModalProps> = ({ job, onClose, t, curr
         const { client: supabase } = getSupabase();
         if (!supabase) return;
 
-        const { data, error: fetchError } = await supabase.from('job_offers').select('*, provider_requests(full_name, phone, user_email)').eq('job_post_id', job.id);
-        
-        if (fetchError) {
-            setError(fetchError.message);
-        } else {
-            const formattedData = data.map((o: any) => ({
-                ...o,
-                provider_name: o.provider_requests.full_name,
-                provider_phone: o.provider_requests.phone,
-                provider_email: o.provider_requests.user_email,
-            }));
+        try {
+            // 1. Fetch Offers
+            const { data: offersData, error: offersError } = await supabase
+                .from('job_offers')
+                .select('*')
+                .eq('job_post_id', job.id);
+            
+            if (offersError) throw offersError;
+
+            if (!offersData || offersData.length === 0) {
+                setOffers([]);
+                setLoading(false);
+                return;
+            }
+
+            // 2. Fetch Provider Details manually to avoid Foreign Key issues
+            const providerIds = offersData.map((o: any) => o.provider_id);
+            
+            // We assume provider_requests table has user_id that matches provider_id
+            const { data: providersData, error: providersError } = await supabase
+                .from('provider_requests')
+                .select('user_id, full_name, phone, user_email')
+                .in('user_id', providerIds);
+
+            if (providersError) {
+                console.warn("Could not fetch provider details:", providersError.message);
+            }
+
+            // 3. Merge Data
+            const formattedData = offersData.map((offer: any) => {
+                const provider = providersData?.find((p: any) => p.user_id === offer.provider_id);
+                return {
+                    ...offer,
+                    provider_name: provider?.full_name || 'Unknown Provider',
+                    provider_phone: provider?.phone || 'N/A',
+                    provider_email: provider?.user_email || 'N/A',
+                };
+            });
+
             setOffers(formattedData);
+
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, [job.id]);
 
     useEffect(() => {
