@@ -26,6 +26,7 @@ import ContactPage from './components/ContactPage';
 import JobPostPage from './components/JobPostPage';
 import JobBoardPage from './components/JobBoardPage';
 import MyActivityPage from './components/MyActivityPage';
+import { UserPlus } from './components/icons';
 
 const MainContent: React.FC<{
   language: Language;
@@ -121,6 +122,20 @@ const MainContent: React.FC<{
         <CityFilter cities={cities} selectedCity={selectedCity} onCityChange={setSelectedCity} t={t} />
       </div>
 
+      <div className="mt-10 mb-8 text-center">
+        <div className="inline-block bg-gray-800/80 border border-gray-700 rounded-xl p-6 max-w-2xl w-full backdrop-blur-sm">
+            <h3 className="text-xl font-semibold text-white mb-2">{t('cant_find_pro')}</h3>
+            <p className="text-gray-400 mb-4">{t('post_job_subtext')}</p>
+            <a 
+                href="#/post-job" 
+                className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-all transform hover:scale-105 shadow-lg shadow-amber-500/20"
+            >
+                <UserPlus className="w-5 h-5" />
+                <span>{t('post_a_job_cta')}</span>
+            </a>
+        </div>
+      </div>
+
       <div className="mt-8">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
         <ServiceGrid currentLang={language} onSelectCategory={handleCategorySelect} selectedCategory={selectedCategory} />
@@ -164,7 +179,11 @@ const App: React.FC = () => {
     }
 
     if (!user) {
-        if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support', '#/post-job', '#/jobs', '#/my-activity'].includes(route)) {
+        if (route === '#/post-job') {
+           window.location.hash = '/login';
+           return;
+        }
+        if (['#/admin', '#/provider-onboarding', '#/pricing', '#/support', '#/jobs', '#/my-activity'].includes(route)) {
             window.location.hash = '/';
         }
         return;

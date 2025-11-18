@@ -440,6 +440,9 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     all_rights_reserved: 'All rights reserved.',
     previous: 'Previous',
     next: 'Next',
+    cant_find_pro: "Can't find the right professional?",
+    post_a_job_cta: "Post a Job Request",
+    post_job_subtext: "Tell us what you need and receive offers from qualified pros.",
     // Auth & Profile
     welcome_back: 'Welcome Back',
     create_account: 'Create Your Account',
@@ -640,6 +643,9 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     all_rights_reserved: 'Tous droits réservés.',
     previous: 'Précédent',
     next: 'Suivant',
+    cant_find_pro: "Vous ne trouvez pas le bon professionnel ?",
+    post_a_job_cta: "Publier une demande",
+    post_job_subtext: "Dites-nous ce dont vous avez besoin et recevez des offres.",
     // Auth & Profile
     welcome_back: 'Bon retour',
     create_account: 'Créer votre compte',
@@ -840,6 +846,9 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     all_rights_reserved: 'جميع الحقوق محفوظة.',
     previous: 'السابق',
     next: 'التالي',
+    cant_find_pro: "لم تجد المحترف المناسب؟",
+    post_a_job_cta: "انشر طلب عمل",
+    post_job_subtext: "أخبرنا بما تحتاجه وتلقى عروضًا من محترفين مؤهلين.",
     // Auth & Profile
     welcome_back: 'مرحبًا بعودتك',
     create_account: 'أنشئ حسابك',
