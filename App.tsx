@@ -196,21 +196,25 @@ const App: React.FC = () => {
 
     const isAdmin = user.email === 'dropshop2345instant@gmail.com';
     const isProvider = user.user_metadata?.role === 'provider';
-    // Treat anyone who is NOT a provider and NOT an admin as a client
-    const isClient = !isAdmin && !isProvider;
+    // Treat anyone who is NOT a provider (including admins) as capable of client actions
+    const canActAsClient = !isProvider; 
     
     const profileSubmitted = user.user_metadata?.profile_submitted;
 
     if (isAdmin) {
-        if (route !== '#/admin') window.location.hash = '/admin';
+        if (route !== '#/admin' && route !== '#/post-job' && route !== '#/my-activity' && route !== '#/support') {
+             // Allow admins to navigate freely, default to admin dash if root
+             if (route === '#/') window.location.hash = '/admin';
+        }
     } else if (isProvider) {
         if (!profileSubmitted && route !== '#/provider-onboarding') {
             window.location.hash = '/provider-onboarding';
         } else if (profileSubmitted && route === '#/provider-onboarding') {
             window.location.hash = '/pricing';
         }
+        // Prevent providers from accessing the job posting page
         if (route === '#/post-job') window.location.hash = '/';
-    } else if (isClient) {
+    } else if (canActAsClient) {
         const hasOnboarded = !!user.user_metadata?.full_name;
         if (!hasOnboarded) {
           const timer = setTimeout(() => setShowOnboardingModal(true), 500);
@@ -219,10 +223,6 @@ const App: React.FC = () => {
         if (['#/provider-onboarding', '#/pricing', '#/admin', '#/jobs'].includes(route)) {
             window.location.hash = '/';
         }
-    }
-    
-    if (!isAdmin && route === '#/admin') {
-        window.location.hash = '/';
     }
   }, [user, route]);
 
@@ -239,8 +239,8 @@ const App: React.FC = () => {
   const renderContent = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
-    // Treat anyone who is NOT a provider and NOT an admin as a client
-    const isClient = user && !isProvider && !isAdminUser;
+    // Allow posting jobs if you are NOT a provider (so admins and clients can post)
+    const canPostJob = user && !isProvider; 
 
     if (route === '#/login') return <AuthPage t={t} initialMode="login" />;
     if (route === '#/signup') return <AuthPage t={t} initialMode="signup" />;
@@ -251,7 +251,7 @@ const App: React.FC = () => {
     if (route === '#/privacy') return <PrivacyPolicyPage t={t} />;
     if (route === '#/guidelines') return <UsageGuidelinesPage t={t} />;
     if (route === '#/contact') return <ContactPage t={t} />;
-    if (route === '#/post-job' && isClient) return <JobPostPage t={t} />;
+    if (route === '#/post-job' && canPostJob) return <JobPostPage t={t} />;
     if (route === '#/jobs' && isProvider) return <JobBoardPage t={t} currentLang={language} />;
     if (route === '#/my-activity' && user) return <MyActivityPage t={t} currentLang={language} />;
     

@@ -189,11 +189,9 @@ const MyOffersView: React.FC<{ t: (key: string) => string, currentLang: Language
 
 const MyActivityPage: React.FC<MyActivityPageProps> = ({ t, currentLang }) => {
     const { user } = useAuth();
-    const isClient = user?.user_metadata?.role === 'client';
-    
-    // If role is not yet defined (e.g. legacy user), default to client view but allow switching if needed logic existed.
-    // For now, strict role check.
-    const [activeTab, setActiveTab] = useState(isClient ? 'jobs' : 'offers');
+    const isProvider = user?.user_metadata?.role === 'provider';
+    // If user is not a provider, default to jobs. Otherwise offers.
+    const [activeTab, setActiveTab] = useState(!isProvider ? 'jobs' : 'offers');
 
     return (
         <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
@@ -206,14 +204,21 @@ const MyActivityPage: React.FC<MyActivityPageProps> = ({ t, currentLang }) => {
                 </div>
 
                 <div className="flex gap-2 border-b border-gray-700 mb-6">
-                    {isClient ? (
-                        <button className="tab-button active"><Briefcase className="w-5 h-5"/>{t('my_jobs')}</button>
-                    ) : (
-                        <button className="tab-button active"><FileText className="w-5 h-5"/>{t('my_offers')}</button>
-                    )}
+                    <button 
+                        className={`tab-button ${activeTab === 'jobs' ? 'active' : ''}`} 
+                        onClick={() => setActiveTab('jobs')}
+                    >
+                        <Briefcase className="w-5 h-5"/>{t('my_jobs')}
+                    </button>
+                    <button 
+                        className={`tab-button ${activeTab === 'offers' ? 'active' : ''}`} 
+                        onClick={() => setActiveTab('offers')}
+                    >
+                        <FileText className="w-5 h-5"/>{t('my_offers')}
+                    </button>
                 </div>
 
-                {isClient ? <MyJobsView t={t} currentLang={currentLang} /> : <MyOffersView t={t} currentLang={currentLang} />}
+                {activeTab === 'jobs' ? <MyJobsView t={t} currentLang={currentLang} /> : <MyOffersView t={t} currentLang={currentLang} />}
             </div>
             <style>{`
                 .tab-button { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; border-radius: 0.5rem 0.5rem 0 0; color: #9ca3af; }

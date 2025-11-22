@@ -33,10 +33,10 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onProfileClick
   const langRef = useRef<HTMLDivElement>(null);
   const { session, user, signOut, isSupabaseConfigured } = useAuth();
   
-  const isAdmin = user?.email === 'dropshop2345instant@gmail.com';
   const isProvider = user?.user_metadata?.role === 'provider';
-  // Relaxed check: Any logged-in user who is NOT a provider and NOT an admin is treated as a client
-  const isClient = user && !isProvider && !isAdmin;
+  // Allow any logged-in user who is NOT a provider to post jobs. 
+  // This covers 'client', 'admin', and users with no specific role set.
+  const canPostJob = user && !isProvider;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang, t, onProfileClick
       {isSupabaseConfigured && (
         session && user ? (
           <>
-            {isClient && (
+            {canPostJob && (
               <a href="#/post-job" className="flex items-center gap-2 text-gray-200 hover:text-amber-400 transition-colors font-medium">
                 <UserPlus className="w-5 h-5" />
                 <span>{t('post_a_job')}</span>
