@@ -45,13 +45,13 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
       ar: 'النجارة',
     },
   },
-  {
+   {
     id: 'repair',
     icon: Wrench,
     name: {
       en: 'General Repair',
       fr: 'Réparation',
-      ar: 'الإصلاحات',
+      ar: 'إصلاحات عامة',
     },
   },
   {
