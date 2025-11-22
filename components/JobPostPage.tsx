@@ -41,8 +41,8 @@ const JobPostPage: React.FC<JobPostPageProps> = ({ t }) => {
         }
 
         try {
-            // Removed client_email from insert as the column does not exist in the database schema
-            const { error: insertError } = await supabase.from('job_posts').insert({
+            // Explicitly defining the object to avoid any chance of including 'client_email'
+            const jobPostData = {
                 client_id: user.id,
                 title,
                 description,
@@ -51,7 +51,10 @@ const JobPostPage: React.FC<JobPostPageProps> = ({ t }) => {
                 budget: parseFloat(budget),
                 budget_type: budgetType,
                 status: 'open',
-            });
+            };
+
+            const { error: insertError } = await supabase.from('job_posts').insert(jobPostData);
+            
             if (insertError) throw insertError;
 
             setSuccess(t('job_posted_successfully'));

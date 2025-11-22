@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { User, Session } from '@supabase/supabase-js';
 
@@ -83,7 +84,6 @@ export interface JobPost {
   location_city: string;
   status: 'open' | 'in_progress' | 'completed' | 'cancelled';
   awarded_to_provider_id?: string | null;
-  client_email?: string;
 }
 
 export interface JobOffer {
