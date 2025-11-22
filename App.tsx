@@ -40,8 +40,6 @@ const MainContent: React.FC<{
   const [selectedCity, setSelectedCity] = useState<string>('All');
   const [professionals, setProfessionals] = useState<Professional[]>(PROFESSIONALS);
   
-  const isProvider = user?.user_metadata?.role === 'provider';
-
   useEffect(() => {
     const fetchProfessionals = async () => {
         const { client: supabase } = getSupabase();
@@ -125,21 +123,19 @@ const MainContent: React.FC<{
         <CityFilter cities={cities} selectedCity={selectedCity} onCityChange={setSelectedCity} t={t} />
       </div>
 
-      {!isProvider && (
-        <div className="mt-10 mb-8 text-center">
-            <div className="inline-block bg-gray-800/80 border border-gray-700 rounded-xl p-6 max-w-2xl w-full backdrop-blur-sm">
-                <h3 className="text-xl font-semibold text-white mb-2">{t('cant_find_pro')}</h3>
-                <p className="text-gray-400 mb-4">{t('post_job_subtext')}</p>
-                <a 
-                    href="#/post-job" 
-                    className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-all transform hover:scale-105 shadow-lg shadow-amber-500/20"
-                >
-                    <UserPlus className="w-5 h-5" />
-                    <span>{t('post_a_job_cta')}</span>
-                </a>
-            </div>
-        </div>
-      )}
+      <div className="mt-10 mb-8 text-center">
+          <div className="inline-block bg-gray-800/80 border border-gray-700 rounded-xl p-6 max-w-2xl w-full backdrop-blur-sm">
+              <h3 className="text-xl font-semibold text-white mb-2">{t('cant_find_pro')}</h3>
+              <p className="text-gray-400 mb-4">{t('post_job_subtext')}</p>
+              <a 
+                  href="#/post-job" 
+                  className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-all transform hover:scale-105 shadow-lg shadow-amber-500/20"
+              >
+                  <UserPlus className="w-5 h-5" />
+                  <span>{t('post_a_job_cta')}</span>
+              </a>
+          </div>
+      </div>
 
       <div className="mt-8">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
@@ -196,14 +192,10 @@ const App: React.FC = () => {
 
     const isAdmin = user.email === 'dropshop2345instant@gmail.com';
     const isProvider = user.user_metadata?.role === 'provider';
-    // Treat anyone who is NOT a provider (including admins) as capable of client actions
-    const canActAsClient = !isProvider; 
-    
     const profileSubmitted = user.user_metadata?.profile_submitted;
 
     if (isAdmin) {
         if (route !== '#/admin' && route !== '#/post-job' && route !== '#/my-activity' && route !== '#/support') {
-             // Allow admins to navigate freely, default to admin dash if root
              if (route === '#/') window.location.hash = '/admin';
         }
     } else if (isProvider) {
@@ -212,9 +204,9 @@ const App: React.FC = () => {
         } else if (profileSubmitted && route === '#/provider-onboarding') {
             window.location.hash = '/pricing';
         }
-        // Prevent providers from accessing the job posting page
-        if (route === '#/post-job') window.location.hash = '/';
-    } else if (canActAsClient) {
+        // Providers can now post jobs too, removed restriction.
+    } else {
+        // Standard Client Logic
         const hasOnboarded = !!user.user_metadata?.full_name;
         if (!hasOnboarded) {
           const timer = setTimeout(() => setShowOnboardingModal(true), 500);
@@ -239,8 +231,6 @@ const App: React.FC = () => {
   const renderContent = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
-    // Allow posting jobs if you are NOT a provider (so admins and clients can post)
-    const canPostJob = user && !isProvider; 
 
     if (route === '#/login') return <AuthPage t={t} initialMode="login" />;
     if (route === '#/signup') return <AuthPage t={t} initialMode="signup" />;
@@ -251,7 +241,7 @@ const App: React.FC = () => {
     if (route === '#/privacy') return <PrivacyPolicyPage t={t} />;
     if (route === '#/guidelines') return <UsageGuidelinesPage t={t} />;
     if (route === '#/contact') return <ContactPage t={t} />;
-    if (route === '#/post-job' && canPostJob) return <JobPostPage t={t} />;
+    if (route === '#/post-job' && user) return <JobPostPage t={t} />;
     if (route === '#/jobs' && isProvider) return <JobBoardPage t={t} currentLang={language} />;
     if (route === '#/my-activity' && user) return <MyActivityPage t={t} currentLang={language} />;
     
