@@ -41,9 +41,9 @@ const JobPostPage: React.FC<JobPostPageProps> = ({ t }) => {
         }
 
         try {
+            // Removed client_email from insert as the column does not exist in the database schema
             const { error: insertError } = await supabase.from('job_posts').insert({
                 client_id: user.id,
-                client_email: user.email,
                 title,
                 description,
                 category_id: categoryId,

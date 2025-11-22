@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { JobPost, JobOffer, Language } from '../types';
 import { getSupabase } from '../lib/supabaseClient';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader, Briefcase, FileText, Trash } from './icons';
+import { Loader, Briefcase, FileText, Trash, UserPlus } from './icons';
 import ViewOffersModal from './ViewOffersModal';
 import { SERVICE_CATEGORIES } from '../constants';
 
@@ -177,7 +177,7 @@ const MyOffersView: React.FC<{ t: (key: string) => string, currentLang: Language
                         {offer.status === 'accepted' && (
                             <div className="mt-4 pt-4 border-t border-gray-700 text-sm text-green-300 bg-green-500/10 p-3 rounded-lg">
                                 <p className="font-bold">Offer Accepted!</p>
-                                <p>{t('contact_provider_at').replace('{phone}', job.client_email || 'N/A')}</p>
+                                <p>Check your notifications or email for contact details.</p>
                             </div>
                         )}
                     </div>
@@ -196,11 +196,18 @@ const MyActivityPage: React.FC<MyActivityPageProps> = ({ t, currentLang }) => {
     return (
         <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
             <div className="max-w-3xl mx-auto bg-gray-800/50 border border-gray-700 rounded-xl p-6 md:p-8">
-                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div>
                         <h1 className="text-3xl font-bold text-white">{t('my_activity')}</h1>
                         <p className="text-gray-400">Track your jobs and offers.</p>
                     </div>
+                    <a 
+                        href="#/post-job" 
+                        className="flex items-center justify-center gap-2 bg-amber-400 text-gray-900 font-bold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors shadow-lg shadow-amber-500/20"
+                    >
+                        <UserPlus className="w-5 h-5" />
+                        <span>{t('post_a_job_cta')}</span>
+                    </a>
                 </div>
 
                 <div className="flex gap-2 border-b border-gray-700 mb-6">

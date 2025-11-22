@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { JobPost, Language } from '../types';
 import { getSupabase } from '../lib/supabaseClient';
-import { Loader, List } from './icons';
+import { Loader, List, UserPlus } from './icons';
 import JobCard from './JobCard';
 import JobDetailModal from './JobDetailModal';
 import { SERVICE_CATEGORIES } from '../constants';
@@ -63,14 +63,23 @@ const JobBoardPage: React.FC<JobBoardPageProps> = ({ t, currentLang }) => {
     return (
         <main className="flex-grow container mx-auto px-4 py-8 md:py-16">
             <div className="max-w-4xl mx-auto">
-                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8 text-center md:text-left">
-                    <div className="p-3 bg-amber-400/10 border border-amber-400/20 rounded-lg self-center md:self-start">
-                        <List className="w-8 h-8 text-amber-400" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 text-center md:text-left">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-amber-400/10 border border-amber-400/20 rounded-lg hidden md:block">
+                            <List className="w-8 h-8 text-amber-400" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold text-white">{t('job_board')}</h1>
+                            <p className="text-gray-400">{t('open_jobs_near_you')}</p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-3xl font-bold text-white">{t('job_board')}</h1>
-                        <p className="text-gray-400">{t('open_jobs_near_you')}</p>
-                    </div>
+                    <a 
+                        href="#/post-job" 
+                        className="flex items-center justify-center gap-2 bg-amber-400 text-gray-900 font-bold py-2 px-4 rounded-lg hover:bg-amber-500 transition-colors shadow-lg shadow-amber-500/20"
+                    >
+                        <UserPlus className="w-5 h-5" />
+                        <span>{t('post_a_job_cta')}</span>
+                    </a>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-gray-800/50 border border-gray-700 rounded-lg">
