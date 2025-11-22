@@ -33,12 +33,15 @@ const MainContent: React.FC<{
   t: (key: string) => string;
   onViewProfile: (pro: Professional) => void;
 }> = ({ language, t, onViewProfile }) => {
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState<string>('All');
   const [professionals, setProfessionals] = useState<Professional[]>(PROFESSIONALS);
   
+  const isProvider = user?.user_metadata?.role === 'provider';
+
   useEffect(() => {
     const fetchProfessionals = async () => {
         const { client: supabase } = getSupabase();
@@ -122,19 +125,21 @@ const MainContent: React.FC<{
         <CityFilter cities={cities} selectedCity={selectedCity} onCityChange={setSelectedCity} t={t} />
       </div>
 
-      <div className="mt-10 mb-8 text-center">
-        <div className="inline-block bg-gray-800/80 border border-gray-700 rounded-xl p-6 max-w-2xl w-full backdrop-blur-sm">
-            <h3 className="text-xl font-semibold text-white mb-2">{t('cant_find_pro')}</h3>
-            <p className="text-gray-400 mb-4">{t('post_job_subtext')}</p>
-            <a 
-                href="#/post-job" 
-                className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-all transform hover:scale-105 shadow-lg shadow-amber-500/20"
-            >
-                <UserPlus className="w-5 h-5" />
-                <span>{t('post_a_job_cta')}</span>
-            </a>
+      {!isProvider && (
+        <div className="mt-10 mb-8 text-center">
+            <div className="inline-block bg-gray-800/80 border border-gray-700 rounded-xl p-6 max-w-2xl w-full backdrop-blur-sm">
+                <h3 className="text-xl font-semibold text-white mb-2">{t('cant_find_pro')}</h3>
+                <p className="text-gray-400 mb-4">{t('post_job_subtext')}</p>
+                <a 
+                    href="#/post-job" 
+                    className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 font-bold py-3 px-8 rounded-lg hover:bg-amber-500 transition-all transform hover:scale-105 shadow-lg shadow-amber-500/20"
+                >
+                    <UserPlus className="w-5 h-5" />
+                    <span>{t('post_a_job_cta')}</span>
+                </a>
+            </div>
         </div>
-      </div>
+      )}
 
       <div className="mt-8">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">{t('our_services')}</h2>
@@ -191,7 +196,9 @@ const App: React.FC = () => {
 
     const isAdmin = user.email === 'dropshop2345instant@gmail.com';
     const isProvider = user.user_metadata?.role === 'provider';
-    const isClient = user.user_metadata?.role === 'client';
+    // Treat anyone who is NOT a provider and NOT an admin as a client
+    const isClient = !isAdmin && !isProvider;
+    
     const profileSubmitted = user.user_metadata?.profile_submitted;
 
     if (isAdmin) {
@@ -232,7 +239,8 @@ const App: React.FC = () => {
   const renderContent = () => {
     const isAdminUser = user?.email === 'dropshop2345instant@gmail.com';
     const isProvider = user?.user_metadata?.role === 'provider';
-    const isClient = user?.user_metadata?.role === 'client';
+    // Treat anyone who is NOT a provider and NOT an admin as a client
+    const isClient = user && !isProvider && !isAdminUser;
 
     if (route === '#/login') return <AuthPage t={t} initialMode="login" />;
     if (route === '#/signup') return <AuthPage t={t} initialMode="signup" />;
