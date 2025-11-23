@@ -8,6 +8,8 @@ export const LANGUAGES: { code: Language; name: string }[] = [
   { code: 'ar', name: 'العربية' },
 ];
 
+export const CITIES = ['All', 'Casablanca', 'Rabat', 'Salé', 'Marrakech', 'Agadir', 'Tanger'];
+
 export const SERVICE_CATEGORIES: ServiceCategory[] = [
   {
     id: 'plumbing',
@@ -249,7 +251,11 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     medium: 'Medium',
     high: 'High',
     submit_ticket: 'Submit Ticket',
-    priority: 'Priority'
+    priority: 'Priority',
+    seo_title_format: '{service} in {city} | Brikole',
+    seo_desc_format: 'Find the best {service} professionals in {city}. Trusted, rated, and available now on Brikole.',
+    popular_searches: 'Popular Searches',
+    in: 'in',
   },
   fr: {
     main_heading: 'Services à Domicile Experts',
@@ -434,7 +440,11 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     medium: 'Moyenne',
     high: 'Haute',
     submit_ticket: 'Soumettre le Ticket',
-    priority: 'Priorité'
+    priority: 'Priorité',
+    seo_title_format: '{service} à {city} | Brikole',
+    seo_desc_format: 'Trouvez les meilleurs professionnels en {service} à {city}. Fiables, notés et disponibles maintenant sur Brikole.',
+    popular_searches: 'Recherches Populaires',
+    in: 'à',
   },
   ar: {
     main_heading: 'خدمات منزلية خبيرة، عند الطلب',
@@ -619,7 +629,11 @@ export const TRANSLATIONS: Record<Language, TranslationSet> = {
     medium: 'متوسطة',
     high: 'عالية',
     submit_ticket: 'إرسال التذكرة',
-    priority: 'الأولوية'
+    priority: 'الأولوية',
+    seo_title_format: '{service} في {city} | Brikole',
+    seo_desc_format: 'اعثر على أفضل مهنيي {service} في {city}. موثوقون ومقيمون ومتاحون الآن على Brikole.',
+    popular_searches: 'الكلمات الأكثر بحثا',
+    in: 'في',
   },
 };
 

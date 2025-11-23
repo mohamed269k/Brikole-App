@@ -11,7 +11,11 @@
   "dependencies": {
     "react-dom": "^19.2.0",
     "react": "^19.2.0",
-    "@supabase/supabase-js": "^2.76.1"
+    "@supabase/supabase-js": "^2.76.1",
+    "react-helmet-async": "2.0.5",
+    "invariant": "2.2.4",
+    "react-fast-compare": "3.2.2",
+    "shallowequal": "1.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
