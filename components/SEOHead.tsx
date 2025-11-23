@@ -16,8 +16,14 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   language,
   path = '' 
 }) => {
-  const baseUrl = 'https://brikole.ma'; // Replace with actual domain if different
-  const fullUrl = `${baseUrl}${path}`;
+  const baseUrl = 'https://brikole.ma'; 
+  // Ensure path starts with a slash if it's not empty
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  // For hash routing, the canonical might usually point to the root or a specific configured server route.
+  // However, Google can index hash URLs if configured properly. 
+  // We will generate a full URL including the hash for social sharing, but for canonical, 
+  // it's safer to point to the clean URL if standard, or the full URL if the content is distinct.
+  const fullUrl = `${baseUrl}${normalizedPath}`;
   const dir = language === 'ar' ? 'rtl' : 'ltr';
 
   // Structured Data for Local Business/Service Platform
