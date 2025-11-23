@@ -36,6 +36,7 @@ const Footer: React.FC<FooterProps> = ({ t }) => {
             <a href="#/contact" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_contact')}</a>
             <a href="#/privacy" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_privacy_policy')}</a>
             <a href="#/guidelines" className="text-gray-400 hover:text-amber-400 transition-colors">{t('footer_usage_guidelines')}</a>
+            <a href="#/sitemap" className="text-gray-400 hover:text-amber-400 transition-colors">Sitemap</a>
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500 text-sm">

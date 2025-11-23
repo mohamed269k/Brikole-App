@@ -30,6 +30,45 @@ import MyActivityPage from './components/MyActivityPage';
 import SEOHead from './components/SEOHead';
 import { UserPlus } from './components/icons';
 
+const SitemapPage: React.FC<{ currentLang: Language }> = ({ currentLang }) => {
+  return (
+    <main className="flex-grow container mx-auto px-4 py-8 md:py-16 text-gray-300">
+      <div className="max-w-4xl mx-auto bg-gray-800/50 border border-gray-700 rounded-xl p-8 animate-fade-in">
+        <h1 className="text-3xl font-bold text-white mb-8 text-center">Sitemap</h1>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-amber-400 border-b border-gray-700 pb-2">Main Pages</h2>
+            <ul className="space-y-2">
+              <li><a href="#/" className="hover:text-white transition-colors">Home</a></li>
+              <li><a href="#/login" className="hover:text-white transition-colors">Login</a></li>
+              <li><a href="#/signup" className="hover:text-white transition-colors">Sign Up</a></li>
+              <li><a href="#/contact" className="hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#/guidelines" className="hover:text-white transition-colors">Usage Guidelines</a></li>
+            </ul>
+          </div>
+
+          {SERVICE_CATEGORIES.map((category) => (
+            <div key={category.id} className="space-y-4">
+               <h2 className="text-xl font-bold text-amber-400 border-b border-gray-700 pb-2">{category.name[currentLang]}</h2>
+               <ul className="space-y-2">
+                 {CITIES.filter(c => c !== 'All').map(city => (
+                   <li key={city}>
+                     <a href={`#/services/${category.id}/${city}`} className="hover:text-white transition-colors text-sm">
+                       {category.name[currentLang]} in {city}
+                     </a>
+                   </li>
+                 ))}
+               </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+};
+
 const MainContent: React.FC<{
   language: Language;
   t: (key: string) => string;
@@ -379,6 +418,12 @@ const App: React.FC = () => {
       <>
         <SEOHead title={`${t('my_activity')} | Brikole`} language={language} path="/my-activity" />
         <MyActivityPage t={t} currentLang={language} />
+      </>
+    );
+    if (route === '#/sitemap') return (
+      <>
+        <SEOHead title="Sitemap | Brikole" language={language} path="/sitemap" />
+        <SitemapPage currentLang={language} />
       </>
     );
     
